@@ -333,8 +333,32 @@ export default {
         if (!item.qty || item.qty === 1) {
           item.qty = Math.abs(this.qty);
         }
-        evntBus.$emit('add_item', item);
-        this.qty = 1;
+        
+    if(item["is_stock_item"]){
+       evntBus.$emit('add_item', item);
+    }else{
+     
+       frappe.call({
+            method: 'posawesome.posawesome.api.posapp.get_product_bundle_items',
+            args: {
+            'item':item
+            },
+            callback: function(r) {
+              if (!r.exc) {
+                var items = r.message;
+
+                for (let x in items) {
+                  var sub_item =items[x];
+                  sub_item["item_name"]=sub_item["item_code"];
+                  evntBus.$emit('add_item', sub_item);
+                }
+              }
+            }
+          });
+    }
+
+    this.qty = 1;
+        
       }
     },
     enter_event() {
