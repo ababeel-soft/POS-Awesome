@@ -114,7 +114,7 @@ export default {
       selected_payments: [],
       selected_mpesa_payments: [],
       sales_order_list: [],
-      order_status_list: ["","To Deliver","dd","45","To"],
+      order_status_list: [],
       sales_order_search: "",
       order_status_search: "",
       payment_methods_list: [],
@@ -330,6 +330,16 @@ export default {
           }
         });
     },
+    get_workflow_status() {
+     
+      frappe.call("posawesome.posawesome.api.posapp.get_workflow_status")
+        .then((r) => {
+          if (r.message) {
+            this.order_status_list = r.message;
+          }
+        });
+    },
+
     get_unallocated_payments() {
       if (!this.pos_profile.posa_allow_reconcile_payments) return;
       this.unallocated_payments_loading = true;
@@ -541,6 +551,8 @@ export default {
         this.fetch_customer_details();
       });
     });
+
+    this.get_workflow_status();
   },
   beforeDestroy() {
     evntBus.$off("update_customer");

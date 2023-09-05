@@ -1753,3 +1753,9 @@ def get_product_bundle_items(item):
         return items
     else:
         return [item]
+
+@frappe.whitelist()
+def get_workflow_status():
+    return frappe.get_all("Workflow State",fields="name",pluck="name")
+
+    
