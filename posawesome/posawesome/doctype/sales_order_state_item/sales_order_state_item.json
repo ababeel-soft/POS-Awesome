@@ -1,0 +1,78 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-09-05 15:56:28.169837",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "from_state",
+  "to_state",
+  "time",
+  "date",
+  "note",
+  "user",
+  "execution_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "from_state",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From State",
+   "options": "Workflow State",
+   "read_only": 1
+  },
+  {
+   "fieldname": "to_state",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To State",
+   "options": "Workflow State",
+   "read_only": 1
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Time"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Note",
+   "read_only": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "execution_time",
+   "fieldtype": "Time",
+   "hidden": 1,
+   "label": "Execution Time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-09-05 16:18:40.856626",
+ "modified_by": "Administrator",
+ "module": "POSAwesome",
+ "name": "Sales Order State Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
