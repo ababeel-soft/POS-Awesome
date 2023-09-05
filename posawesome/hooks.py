@@ -103,6 +103,10 @@ doc_events = {
     },
 }
 
+override_doctype_class = {
+	"Sales Order": "posawesome.overides.CustomSalesOrder",
+}
+
 # Scheduled Tasks
 # ---------------
 
