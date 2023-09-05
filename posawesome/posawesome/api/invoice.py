@@ -72,6 +72,8 @@ def create_sales_order(doc):
             sales_order_doc.posa_notes = doc.posa_notes
             sales_order_doc.flags.ignore_permissions = True
             sales_order_doc.flags.ignore_account_permission = True
+            sales_order_doc.recipient_person=doc.recipient_person
+            sales_order_doc.recipient_phone_number=doc.recipient_phone_number
             sales_order_doc.save()
             sales_order_doc.submit()
             url = frappe.utils.get_url_to_form(

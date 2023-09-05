@@ -398,6 +398,36 @@
               </template>
             </v-autocomplete>
           </v-col>
+           <v-col cols="6" v-if="pos_profile.posa_allow_sales_order && invoiceType == 'Order'">
+            <v-text-field
+              class="pa-0"
+              outlined
+              dense
+              background-color="white"
+              clearable
+              color="primary"
+              auto-grow
+              rows="2"
+              :label="frappe._('Recipient Person')"
+              v-model="invoice_doc.recipient_person"
+              :value="invoice_doc.recipient_person"
+            ></v-text-field>
+          </v-col>
+           <v-col cols="6" v-if="pos_profile.posa_allow_sales_order && invoiceType == 'Order'">
+            <v-text-field
+              class="pa-0"
+              outlined
+              dense
+              background-color="white"
+              clearable
+              color="primary"
+              auto-grow
+              rows="2"
+              :label="frappe._('Recipient Phone Number')"
+              v-model="invoice_doc.recipient_phone_number"
+              :value="invoice_doc.recipient_phone_number"
+            ></v-text-field>
+          </v-col>
           <v-col cols="12" v-if="pos_profile.posa_display_additional_notes">
             <v-textarea
               class="pa-0"
@@ -1377,7 +1407,8 @@ export default {
         if (this.invoice_doc && data != "Order") {
           this.invoice_doc.posa_delivery_date = null;
           this.invoice_doc.posa_notes = null;
-          this.invoice_doc.shipping_address_name = null;
+          this.invoice_doc.posa_notes = null;
+          this.invoice_doc.recipient_phone_number = null;
         }
       });
     });
