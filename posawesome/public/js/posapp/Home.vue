@@ -11,6 +11,7 @@
 import Navbar from './components/Navbar.vue';
 import POS from './components/pos/Pos.vue';
 import Payments from './components/payments/Pay.vue';
+import Orders from './components/orders/Order.vue';
 
 export default {
   data: function () {
@@ -22,6 +23,7 @@ export default {
     Navbar,
     POS,
     Payments,
+    Orders
   },
   methods: {
     setPage(page) {

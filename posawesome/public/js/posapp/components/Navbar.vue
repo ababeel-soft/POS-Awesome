@@ -249,6 +249,12 @@ export default {
           this.items.push(payments);
         }
       });
+
+      evntBus.$on('register_pos_profile', (data) => {
+        this.pos_profile = data.pos_profile;
+        const orders = { text: 'Orders', icon: 'mdi-cash-register' };
+         this.items.push(orders);
+      });
       evntBus.$on('set_last_invoice', (data) => {
         this.last_invoice = data;
       });
