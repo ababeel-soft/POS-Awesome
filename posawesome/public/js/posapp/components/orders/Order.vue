@@ -1,13 +1,19 @@
 <template>
   <div fluid>
     <v-row v-show="!dialog">
-      <v-col md="8" cols="12" class="pb-2 pr-0">
+      <v-col md="12" cols="12" class="pb-2 pr-0">
         <v-card
           class="main mx-auto grey lighten-5 mt-3 p-3 pb-16 overflow-y-auto"
           style="max-height: 94vh; height: 94vh"
         >
-          <Customer></Customer>
+          
+
           <div>
+            <v-row>
+            <v-col md="4" cols="12">
+            <Customer></Customer>
+            </v-col>
+            </v-row>
             <v-row>
               <v-col md="7" cols="12">
                 <p>
@@ -16,7 +22,7 @@
               </v-col>
             </v-row>
             <v-row align="center" no-gutters class="mb-1">
-              <v-col md="4" cols="12">
+              <v-col md="3" cols="12">
                 <v-autocomplete
                   dense
                   outlined
@@ -144,87 +150,17 @@ export default {
         },
         {
           text: __("Total"),
-          align: "end",
+          align: "start",
           sortable: true,
           value: "grand_total",
         },
         {
           text: __("Status"),
-          align: "end",
+          align: "start",
           sortable: true,
           value: "workflow_state",
         },
-      ],
-      unallocated_payments_headers: [
-        {
-          text: __("Payment ID"),
-          align: "start",
-          sortable: true,
-          value: "name",
-        },
-        {
-          text: __("Customer"),
-          align: "start",
-          sortable: true,
-          value: "customer_name",
-        },
-        {
-          text: __("Date"),
-          align: "start",
-          sortable: true,
-          value: "posting_date",
-        },
-        {
-          text: __("Mode"),
-          align: "start",
-          sortable: true,
-          value: "mode_of_payment",
-        },
-        {
-          text: __("Paid"),
-          align: "end",
-          sortable: true,
-          value: "paid_amount",
-        },
-        {
-          text: __("Unallocated"),
-          align: "end",
-          sortable: true,
-          value: "unallocated_amount",
-        },
-      ],
-      mpesa_payment_headers: [
-        {
-          text: __("Payment ID"),
-          align: "start",
-          sortable: true,
-          value: "transid",
-        },
-        {
-          text: __("Full Name"),
-          align: "start",
-          sortable: true,
-          value: "full_name",
-        },
-        {
-          text: __("Nobile Number"),
-          align: "start",
-          sortable: true,
-          value: "mobile_no",
-        },
-        {
-          text: __("Date"),
-          align: "start",
-          sortable: true,
-          value: "posting_date",
-        },
-        {
-          text: __("Amount"),
-          align: "end",
-          sortable: true,
-          value: "amount",
-        },
-      ],
+      ]
     };
   },
 
