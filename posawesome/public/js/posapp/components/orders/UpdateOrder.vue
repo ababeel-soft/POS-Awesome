@@ -87,7 +87,7 @@
                   auto-select-first
                   color="primary"
                   :label="frappe._('Status') + ' *'"
-                  v-model="status"
+                  v-model="workflow_state"
                   :items="workflowstatus"
                   background-color="white"
                   :no-data-text="__('Status not found')"
@@ -240,6 +240,7 @@ export default {
               evntBus.$emit('fetch_customer_details');
               this.close_dialog();
             } else {
+              
               frappe.utils.play_sound('error');
               evntBus.$emit('show_mesage', {
                 text: __('Customer creation failed.'),
