@@ -6,8 +6,6 @@
           class="main mx-auto grey lighten-5 mt-3 p-3 pb-16 overflow-y-auto"
           style="max-height: 94vh; height: 94vh"
         >
-          
-
           <div>
             <v-row>
             <v-col md="4" cols="12">
