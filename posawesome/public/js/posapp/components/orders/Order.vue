@@ -62,7 +62,7 @@
             <UpdateOrder></UpdateOrder>
             <v-data-table
               :headers="orders_headers"
-              :items="outstanding_invoices"
+              :items="sales_orders"
               item-key="name"
               class="elevation-1 mt-0"
               v-model="selected_invoices"
@@ -111,7 +111,7 @@ export default {
       unallocated_payments_loading: false,
       mpesa_payments_loading: false,
       payment_methods: [],
-      outstanding_invoices: [],
+      sales_orders: [],
       unallocated_payments: [],
       mpesa_payments: [],
       selected_invoices: [],
@@ -125,8 +125,6 @@ export default {
       mpesa_searchname: "",
       mpesa_search_mobile: "",
       orders_headers: [ 
-
-       
 
          {
           text: __("Order"),
@@ -195,7 +193,7 @@ export default {
         });
     },
     get_available_pos_profiles() {
-      if (!this.pos_profile.posa_allow_mpesa_reconcile_payments) return;
+  
       return frappe
         .call(
           "posawesome.posawesome.api.sales_order.get_available_orders",
@@ -259,7 +257,7 @@ export default {
         )
         .then((r) => {
           if (r.message) {
-            this.outstanding_invoices = r.message;
+            this.sales_orders = r.message;
             this.invoices_loading = false;
           }
         });
@@ -351,7 +349,7 @@ export default {
       this.mpesa_search_name = "";
       this.mpesa_payments = [];
       this.selected_mpesa_payments = [];
-      this.outstanding_invoices = [];
+      this.sales_orders = [];
       this.unallocated_payments = [];
       this.selected_invoices = [];
       this.selected_payments = [];
@@ -425,7 +423,7 @@ export default {
 
   computed: {
     total_outstanding_amount() {
-      return this.outstanding_invoices.reduce(
+      return this.sales_orders.reduce(
         (acc, cur) => acc + flt(cur.outstanding_amount),
         0
       );
@@ -481,6 +479,12 @@ export default {
         this.get_unallocated_payments();
         this.get_draft_mpesa_payments_register();
       });
+
+      evntBus.$on('show_list',() => {
+      this.get_sales_orders();
+      });
+
+      
       evntBus.$on("fetch_customer_details", () => {
         this.fetch_customer_details();
       });

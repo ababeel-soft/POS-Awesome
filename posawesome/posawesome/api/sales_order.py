@@ -63,3 +63,8 @@ def get_available_orders(company, currency):
         pluck="name",
     )
     return orders_list
+
+@frappe.whitelist()
+def update_order(workflow_state):
+    print(workflow_state)
+    
