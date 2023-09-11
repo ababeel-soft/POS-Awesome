@@ -292,6 +292,8 @@ def get_items(pos_profile, price_list=None, item_group="", search_value=""):
                         item_code, pos_profile.get("warehouse")
                     )
                 attributes = ""
+
+               
                 if pos_profile.get("posa_show_template_items") and item.has_variants:
                     attributes = get_item_attributes(item.item_code)
                 item_attributes = ""
@@ -872,7 +874,7 @@ def get_items_details(pos_profile, items_data):
     if ttl:
         ttl = int(ttl) * 60
 
-    @redis_cache(ttl=ttl or 1800)
+    @redis_cache(0 or 0)
     def __get_items_details(pos_profile, items_data):
         return _get_items_details(pos_profile, items_data)
 
@@ -882,11 +884,12 @@ def get_items_details(pos_profile, items_data):
         items_data = json.loads(items_data)
         warehouse = pos_profile.get("warehouse")
         result = []
-
+        
         if len(items_data) > 0:
             for item in items_data:
                 item_code = item.get("item_code")
                 item_stock_qty = get_stock_availability(item_code, warehouse)
+                
                 has_batch_no, has_serial_no = frappe.get_value(
                     "Item", item_code, ["has_batch_no", "has_serial_no"]
                 )
@@ -988,6 +991,7 @@ def get_item_detail(item, doc=None, warehouse=None, price_list=None):
     )
     if item.get("is_stock_item") and warehouse:
         res["actual_qty"] = get_stock_availability(item_code, warehouse)
+    
     res["max_discount"] = max_discount
     res["batch_no_data"] = batch_no_data
     return res

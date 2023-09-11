@@ -10,7 +10,7 @@
         absolute
         top
         color="info"
-      ></v-progress-linear>
+      ></v-progress-linear> 
       <v-row class="items px-2 py-1">
         <v-col class="pb-0 mb-2">
           <v-text-field
@@ -72,6 +72,8 @@
                       item.image ||
                       '/assets/posawesome/js/posapp/components/pos/placeholder-image.png'
                     "
+                    @mouseover=" show_image(item,true)"
+                    @mouseout="show_image(item,false)"
                     class="white--text align-end"
                     gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4)"
                     height="100px"
@@ -173,6 +175,7 @@ import _ from 'lodash';
 export default {
   mixins: [format],
   data: () => ({
+    imageDialog:false,
     pos_profile: '',
     flags: {},
     items_view: 'list',
@@ -196,7 +199,7 @@ export default {
     filtred_items(new_value, old_value) {
       if (!this.pos_profile.pose_use_limit_search) {
         if (new_value.length != old_value.length) {
-          this.update_items_details(new_value);
+           this.update_items_details(new_value);
         }
       }
     },
@@ -209,6 +212,17 @@ export default {
   },
 
   methods: {
+
+     show_image(item,show) {
+    
+      if (item.image){
+      this.image_src=item.image;
+      }else{
+       this.image_src ='/assets/posawesome/js/posapp/components/pos/placeholder-image.png';
+      }
+      this.imageDialog = show; 
+     },
+
     show_offers() {
       evntBus.$emit('show_offers', 'true');
     },
@@ -272,6 +286,7 @@ export default {
               vm.enter_event();
             }
           }
+         evntBus.$emit('update_cur_items_details');
         },
       });
     },
