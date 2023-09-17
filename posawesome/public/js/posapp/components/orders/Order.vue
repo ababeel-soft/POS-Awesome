@@ -6,6 +6,7 @@
           class="main mx-auto grey lighten-5 mt-3 p-3 pb-16 overflow-y-auto"
           style="max-height: 94vh; height: 94vh"
         >
+        <input type="file" @change="handleFileUpload">
           <div>
             <v-row>
             <v-col md="4" cols="12">
@@ -67,6 +68,8 @@
               class="elevation-1 mt-0"
               v-model="selected_invoices"
               :loading="invoices_loading"
+              :sort-by.sync="sortBy"
+              :sort-desc.sync="sortDesc"
             >
 
           <template v-slot:item="{ item }">
@@ -100,6 +103,9 @@ export default {
   mixins: [format],
   data: function () {
     return {
+      selectedFile: null,
+      sortBy: 'name',
+      sortDesc: true,
       dialog: false,
       pos_profile: "",
       pos_opening_shift: "",
@@ -167,6 +173,27 @@ export default {
   },
 
   methods: {
+    handleFileUpload(event) {
+    this.selectedFile = event.target.files[0];
+
+    
+
+    const instance = axios.create({
+    baseURL: 'http://127.0.0.1:8000'
+    });
+    let formData = new FormData();
+    formData.append('file', this.selectedFile);
+
+    instance.post('/files', formData)
+    .then(response => {
+    console.log('File uploaded successfully:', response.data);
+    })
+    .catch(error => {
+    console.error('Error uploading file:', error);
+    });
+
+    
+  },
     check_opening_entry() {
       return frappe
         .call("posawesome.posawesome.api.posapp.check_opening_shift", {

@@ -540,8 +540,7 @@ def update_invoice(data):
 def submit_invoice(invoice, data):
     data = json.loads(data)
     invoice = json.loads(invoice)
-    print(invoice)
-    
+  
     invoice_doc = frappe.get_doc("Sales Invoice", invoice.get("name"))
     invoice_doc.update(invoice)
     if invoice.get("posa_delivery_date"):
@@ -613,8 +612,9 @@ def submit_invoice(invoice, data):
     invoice_doc.flags.ignore_permissions = True
     frappe.flags.ignore_account_permission = True
     invoice_doc.posa_is_printed = 1
+    #invoice_doc.bundle_details=data["bundle_details"]
     invoice_doc.save()
-
+    print(invoice_doc)
     if frappe.get_value(
         "POS Profile",
         invoice_doc.pos_profile,

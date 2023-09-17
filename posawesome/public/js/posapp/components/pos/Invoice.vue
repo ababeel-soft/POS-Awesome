@@ -941,7 +941,6 @@ export default {
       this.calc_stock_qty(item, item.qty);
       this.$forceUpdate();
     },
-
     add_item(item) {
       if (!item.uom) {
         item.uom = item.stock_uom;
@@ -1094,6 +1093,8 @@ export default {
     new_invoice(data = {}) {
       let old_invoice = null;
       evntBus.$emit("set_customer_readonly", false);
+      evntBus.$emit('add_bundle', null);
+      console.log("new ");
       this.expanded = [];
       this.posa_offers = [];
       evntBus.$emit("set_pos_coupons", []);
@@ -2651,6 +2652,7 @@ export default {
     evntBus.$on("add_item", (item) => {
       this.add_item(item);
     });
+    
     evntBus.$on("update_customer", (customer) => {
       this.customer = customer;
     });

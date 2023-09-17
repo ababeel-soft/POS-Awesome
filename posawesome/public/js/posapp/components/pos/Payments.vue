@@ -738,6 +738,7 @@ export default {
     loading: false,
     pos_profile: "",
     invoice_doc: "",
+    bundle_details:"",
     loyalty_amount: 0,
     is_credit_sale: 0,
     is_write_off_change: 0,
@@ -886,6 +887,7 @@ export default {
       this.back_to_invoice();
     },
     submit_invoice(print) {
+     
       let totalPayedAmount = 0;
       this.invoice_doc.payments.forEach((payment) => {
         payment.amount = flt(payment.amount);
@@ -908,6 +910,11 @@ export default {
       data["redeemed_customer_credit"] = this.redeemed_customer_credit;
       data["customer_credit_dict"] = this.customer_credit_dict;
       data["is_cashback"] = this.is_cashback;
+      
+      if (this.bundle_details ){
+         this.invoice_doc.bundle_details=this.bundle_details.item_code
+         evntBus.$emit("add_bundle",null);
+      }
 
       const vm = this;
       frappe.call({
@@ -1276,6 +1283,12 @@ export default {
       this.clear_all_amounts();
       this.customer_credit_dict.push(advance);
     },
+      add_bundle(item) {
+      this.bundle_details=item;
+      },
+      reset_bundle(){
+      this.bundle_details="";
+      }
   },
 
   computed: {
@@ -1429,6 +1442,9 @@ export default {
     evntBus.$on("set_mpesa_payment", (data) => {
       this.set_mpesa_payment(data);
     });
+    evntBus.$on("add_bundle", (item) => {
+     this.add_bundle(item)
+    });
   },
   created() {
     document.addEventListener("keydown", this.shortPay.bind(this));
@@ -1443,10 +1459,13 @@ export default {
     evntBus.$off("set_customer_info_to_edit");
     evntBus.$off("update_invoice_coupons");
     evntBus.$off("set_mpesa_payment");
+   
+
   },
 
   destroyed() {
     document.removeEventListener("keydown", this.shortPay);
+    
   },
 
   watch: {
@@ -1503,6 +1522,7 @@ export default {
         this.invoice_doc.sales_team = [];
       }
     },
+
   },
 };
 </script>

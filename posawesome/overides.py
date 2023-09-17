@@ -19,6 +19,9 @@ class CustomSalesOrder(SalesOrder):
         row.from_state = state
         row.to_state = self.workflow_state
         row.user =session.user
+        if self.notes:
+            row.note =self.notes
+            self.notes=""
         self.user=session.user
         row.time = datetime.now().time()
         row.date = date.today()
