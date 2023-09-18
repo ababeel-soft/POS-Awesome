@@ -874,7 +874,7 @@ def get_items_details(pos_profile, items_data):
     if ttl:
         ttl = int(ttl) * 60
 
-    @redis_cache(0 or 0)
+    @redis_cache(ttl or 1800)
     def __get_items_details(pos_profile, items_data):
         return _get_items_details(pos_profile, items_data)
 
