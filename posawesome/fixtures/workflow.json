@@ -83,19 +83,6 @@
     "parent": "Sales Order Workflow",
     "parentfield": "states",
     "parenttype": "Workflow",
-    "state": "Under Delivery",
-    "update_field": "",
-    "update_value": ""
-   },
-   {
-    "allow_edit": "All",
-    "doc_status": "1",
-    "is_optional_state": 0,
-    "message": null,
-    "next_action_email_template": null,
-    "parent": "Sales Order Workflow",
-    "parentfield": "states",
-    "parenttype": "Workflow",
     "state": "Delivery",
     "update_field": "",
     "update_value": ""
