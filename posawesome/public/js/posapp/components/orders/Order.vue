@@ -6,7 +6,7 @@
           class="main mx-auto grey lighten-5 mt-3 p-3 pb-16 overflow-y-auto"
           style="max-height: 94vh; height: 94vh"
         >
-        <input type="file" @change="handleFileUpload">
+       
           <div>
             <v-row>
             <v-col md="4" cols="12">
@@ -61,6 +61,8 @@
               </v-col>
             </v-row>
             <UpdateOrder></UpdateOrder>
+            <OrderEvaluation></OrderEvaluation>
+            <ImageDialog></ImageDialog>
             <v-data-table
               :headers="orders_headers"
               :items="sales_orders"
@@ -97,7 +99,8 @@ import format from "../../format";
 import Customer from "../pos/Customer.vue";
 import UpdateCustomer from "../pos/UpdateCustomer.vue";
 import UpdateOrder from "../orders/UpdateOrder.vue";
-
+import ImageDialog from "../orders/ImageDialog.vue";
+import OrderEvaluation from "../orders/OrderEvaluation.vue";
 
 export default {
   mixins: [format],
@@ -170,6 +173,8 @@ export default {
     Customer,
     UpdateCustomer,
     UpdateOrder,
+    OrderEvaluation,
+    ImageDialog
   },
 
   methods: {
@@ -266,8 +271,12 @@ export default {
     },
 
     rowClicked(item){
-      evntBus.$emit("open_update_order",item);
-      //alert(item.name)
+      if (item.workflow_state !="Delivery"){
+        evntBus.$emit("open_update_order",item);
+      }else{
+        evntBus.$emit("open_order_evaluation",item);
+      }
+      
     },
     get_sales_orders() {
       this.invoices_loading = true;

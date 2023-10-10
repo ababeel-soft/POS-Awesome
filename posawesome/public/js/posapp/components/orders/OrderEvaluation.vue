@@ -2,15 +2,13 @@
   
   <v-row justify="center">    
     <v-dialog
-      v-model="OrderDialog"
+      v-model="OrderEvaluation"
       max-width="600px"
       @click:outside="clear_order"
     >
       <v-card>
         <v-card-title>
-          <span v-if="customer" class="headline primary--text">{{
-            __('Update Order')
-          }}</span>
+          <span v-if="customer" class="headline primary--text">{{__('Order Evaluation')}}</span>
         </v-card-title>
         <v-card-text class="pa-0">
           <v-container>
@@ -38,85 +36,35 @@
                   v-model="contact_mobile"
                 ></v-text-field>
               </v-col>
-              
-              <v-col cols="6">
-                <v-text-field
-                  dense
-                  readonly
-                  color="#FF0E0E"
-                  :label="frappe._('Sales Order') + ' *'"
-                  background-color="white"
-                  hide-details
-                  v-model="order_name"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-menu
-                  ref="delivery_date_menu"
-                  v-model="delivery_date_menu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  dense
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="delivery_date"
-                      :label="frappe._('Delivery Date')"
-                      readonly
-                      dense
-                      clearable
-                      hide-details
-                      v-bind="attrs"
-                      v-on="on"
-                      color="primary"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="delivery_date"
-                    color="primary"
-                    no-title
-                    scrollable
-                    @input="delivery_date_menu = false"
-                  >
-                  </v-date-picker>
-                </v-menu>
-              </v-col>
-              <v-col cols="6">
-                <v-autocomplete
-                  clearable
-                  dense
-                  auto-select-first
-                  color="primary"
-                  :label="frappe._('Status') + ' *'"
-                  v-model="workflow_state"
-                  :items="workflowstatus"
-                  background-color="white"
-                  :no-data-text="__('Status not found')"
-                  hide-details
-                  required
-                >
-                </v-autocomplete>
-              </v-col>
-              
-              <v-col cols="6" v-if="loyalty_program">
-                <v-text-field
-                  v-model="loyalty_program"
-                  :label="frappe._('Loyalty Program')"
-                  dense
-                  readonly
-                  hide-details
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6" v-if="loyalty_points">
-                <v-text-field
-                  v-model="loyalty_points"
-                  :label="frappe._('Loyalty Points')"
-                  dense
-                  readonly
-                  hide-details
-                ></v-text-field>
-              </v-col>
             </v-row>
+
+
+ <v-row>
+<v-col cols="12">
+ <v-data-table
+              :headers="orders_headers"
+              :items="sales_orders"
+              item-key="name"
+              class="elevation-1 mt-0"
+              v-model="selected_invoices"
+              :loading="invoices_loading"
+            >
+
+          <template v-slot:item="{ item }">
+          <tr @click="rowClicked(item)" >
+          <td>{{item.name}}</td>
+          <td>{{item.customer}}</td>
+          <td>{{item.delivery_date}}</td>
+          <td>{{item.grand_total}} {{ currencySymbol(pos_profile.currency) }}</td>
+          <td>{{item.workflow_state}}</td>
+          </tr>
+          
+          </template>
+
+            </v-data-table>
+ </v-col>
+ </v-row>
+
              <v-row justify="center">
           <v-container>
             <div>
@@ -182,7 +130,7 @@
 import { evntBus } from '../../bus';
 export default {
   data: () => ({
-    OrderDialog: false,
+    OrderEvaluation: false,
     customer: '',
     contact_mobile: '',
     workflow_state: '',
@@ -194,7 +142,7 @@ export default {
   watch: {},
   methods: {
     close_dialog() {
-      this.OrderDialog = false;
+      this.OrderEvaluation = false;
       this.clear_order();
     },
     clear_order() {
@@ -254,7 +202,7 @@ export default {
           
           },
         });
-        this.OrderDialog = false;
+        this.OrderEvaluation = false;
       
     },
     get_order_items(order) {
@@ -272,9 +220,9 @@ export default {
   }
   },
   created: function () {
-    evntBus.$on('open_update_order', (data) => {
+    evntBus.$on('open_order_evaluation', (data) => {
       console.log(data);
-      this.OrderDialog = true;
+      this.OrderEvaluation = true;
       
       if (data) {
         this.customer= data.customer_name

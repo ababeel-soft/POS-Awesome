@@ -72,8 +72,7 @@
                       item.image ||
                       '/assets/posawesome/js/posapp/components/pos/placeholder-image.png'
                     "
-                    @mouseover=" show_image(item,true)"
-                    @mouseout="show_image(item,false)"
+                    @click.right=" show_image(item,true)"
                     class="white--text align-end"
                     gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4)"
                     height="100px"
@@ -164,6 +163,7 @@
           >
         </v-col>
       </v-row>
+      <ImageDialog></ImageDialog>
     </v-card>
   </div>
 </template>
@@ -172,6 +172,7 @@
 import { evntBus } from '../../bus';
 import format from '../../format';
 import _ from 'lodash';
+import ImageDialog from "../orders/ImageDialog.vue";
 export default {
   mixins: [format],
   data: () => ({
@@ -214,15 +215,8 @@ export default {
   methods: {
 
      show_image(item,show) {
-    
-      if (item.image){
-      this.image_src=item.image;
-      }else{
-       this.image_src ='/assets/posawesome/js/posapp/components/pos/placeholder-image.png';
-      }
-      this.imageDialog = show; 
+     evntBus.$emit("open_image_dialog",item,show);
      },
-
     show_offers() {
       evntBus.$emit('show_offers', 'true');
     },
@@ -683,6 +677,9 @@ export default {
   mounted() {
     this.scan_barcoud();
   },
+  components:{
+    ImageDialog
+  }
 };
 </script>
 

@@ -5,20 +5,13 @@
         @click.stop="drawer = !drawer"
         class="grey--text"
       ></v-app-bar-nav-icon>
-      <v-img
-        src="/assets/posawesome/js/posapp/components/pos/pos.png"
-        alt="POS Awesome"
-        max-width="32"
-        class="mr-2"
-        color="primary"
-      ></v-img>
+      
       <v-toolbar-title
         @click="go_desk"
         style="cursor: pointer"
         class="text-uppercase primary--text"
       >
-        <span class="font-weight-light">pos</span>
-        <span>awesome</span>
+        <span class="font-weight-light">POS</span>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -97,7 +90,7 @@
       <v-list dark>
         <v-list-item class="px-2">
           <v-list-item-avatar>
-            <v-img :src="company_img"></v-img>
+            
           </v-list-item-avatar>
 
           <v-list-item-title>{{ company }}</v-list-item-title>
