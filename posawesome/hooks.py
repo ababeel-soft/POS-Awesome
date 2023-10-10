@@ -271,4 +271,11 @@ fixtures = [
         "doctype": "Workflow",
         "filters": [["name", "in", ("Sales Order Workflow")]],
     },
+     {
+        "doctype": "Workflow State",
+    },
+     {
+        "doctype": "Workflow Action Master",
+    },
 ]
+

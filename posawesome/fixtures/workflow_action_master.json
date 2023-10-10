@@ -1,0 +1,86 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-09-17 16:27:53.246866",
+  "name": "Approve",
+  "workflow_action_name": "Approve"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-09-17 16:27:53.248717",
+  "name": "Reject",
+  "workflow_action_name": "Reject"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-09-17 16:27:53.250286",
+  "name": "Review",
+  "workflow_action_name": "Review"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-07 14:27:17.913584",
+  "name": "Submit",
+  "workflow_action_name": "Submit"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-07 14:27:28.725944",
+  "name": "Start",
+  "workflow_action_name": "Start"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-07 14:27:39.145732",
+  "name": "Quality Inspection",
+  "workflow_action_name": "Quality Inspection"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-07 14:27:48.212526",
+  "name": "Complete",
+  "workflow_action_name": "Complete"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-07 14:27:58.357658",
+  "name": "Delivery Service",
+  "workflow_action_name": "Delivery Service"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-07 14:28:08.169329",
+  "name": "Delivery",
+  "workflow_action_name": "Delivery"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-07 17:17:09.111935",
+  "name": "Continue",
+  "workflow_action_name": "Continue"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-10 08:21:55.342336",
+  "name": "Ready To Delivery",
+  "workflow_action_name": "Ready To Delivery"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-10 10:57:15.390931",
+  "name": "Restart",
+  "workflow_action_name": "Restart"
+ }
+]

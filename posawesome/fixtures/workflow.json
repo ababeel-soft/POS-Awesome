@@ -4,7 +4,7 @@
   "doctype": "Workflow",
   "document_type": "Sales Order",
   "is_active": 1,
-  "modified": "2023-09-05 12:17:01.957496",
+  "modified": "2023-10-10 11:07:33.170896",
   "name": "Sales Order Workflow",
   "override_status": 0,
   "send_email_alert": 0,
@@ -99,6 +99,58 @@
     "state": "Delivery",
     "update_field": "",
     "update_value": ""
+   },
+   {
+    "allow_edit": "All",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Sales Order Workflow",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Quality Rejected",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "All",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Sales Order Workflow",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Re Processing",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "All",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Sales Order Workflow",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Ready To Delivery",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "All",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Sales Order Workflow",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "On Delivery",
+    "update_field": null,
+    "update_value": null
    }
   ],
   "transitions": [
@@ -147,15 +199,59 @@
     "state": "Quality Inspection"
    },
    {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Quality Rejected",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Quality Inspection"
+   },
+   {
+    "action": "Ready To Delivery",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Delivery",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Completed"
+   },
+   {
+    "action": "Restart",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Processing",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Quality Rejected"
+   },
+   {
+    "action": "Delivery",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Delivery",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Ready To Delivery"
+   },
+   {
     "action": "Delivery Service",
     "allow_self_approval": 1,
     "allowed": "All",
     "condition": null,
-    "next_state": "Under Delivery",
+    "next_state": "On Delivery",
     "parent": "Sales Order Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Completed"
+    "state": "Ready To Delivery"
    },
    {
     "action": "Delivery",
@@ -166,18 +262,7 @@
     "parent": "Sales Order Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Under Delivery"
-   },
-   {
-    "action": "Delivery",
-    "allow_self_approval": 1,
-    "allowed": "All",
-    "condition": null,
-    "next_state": "Delivery",
-    "parent": "Sales Order Workflow",
-    "parentfield": "transitions",
-    "parenttype": "Workflow",
-    "state": "Completed"
+    "state": "On Delivery"
    }
   ],
   "workflow_name": "Sales Order Workflow",

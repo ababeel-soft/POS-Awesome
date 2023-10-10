@@ -1,0 +1,92 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-09-17 20:18:08.397282",
+  "name": "Completed",
+  "style": "",
+  "workflow_state_name": "Completed"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-09-17 20:18:37.735933",
+  "name": "Delivery",
+  "style": "",
+  "workflow_state_name": "Delivery"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-07 17:15:10.384557",
+  "name": "Re Processing",
+  "style": "",
+  "workflow_state_name": "Re Processing"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-10 08:18:28.976945",
+  "name": "On Delivery",
+  "style": "",
+  "workflow_state_name": "On Delivery"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-10 08:20:30.929879",
+  "name": "Ready To Delivery",
+  "style": "",
+  "workflow_state_name": "Ready To Delivery"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-09-17 20:16:01.982871",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "question-sign",
+  "modified": "2023-09-17 16:27:53.217029",
+  "name": "Pending",
+  "style": "",
+  "workflow_state_name": "Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-07 14:21:44.357174",
+  "name": "Quality Rejected",
+  "style": "",
+  "workflow_state_name": "Quality Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-09-17 20:17:48.474381",
+  "name": "Quality Inspection",
+  "style": "",
+  "workflow_state_name": "Quality Inspection"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-09-17 20:17:28.508640",
+  "name": "Processing",
+  "style": "",
+  "workflow_state_name": "Processing"
+ }
+]
