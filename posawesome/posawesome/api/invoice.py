@@ -73,7 +73,8 @@ def create_sales_order(doc):
             sales_order_doc.flags.ignore_permissions = True
             sales_order_doc.flags.ignore_account_permission = True
             sales_order_doc.delivery_date=doc.posa_delivery_date
-                                
+            if doc.posa_delivery_time:
+                sales_order_doc.custom_delivery_time=doc.posa_delivery_time
             if hasattr(doc, "recipient_person"):
                 sales_order_doc.recipient_person=doc.recipient_person
             if hasattr(doc, "recipient_phone_number"):

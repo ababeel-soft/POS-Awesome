@@ -343,7 +343,42 @@
               >
               </v-date-picker>
             </v-menu>
-          </v-col>
+ </v-col>
+ <v-col
+            cols="6"
+            v-if="pos_profile.posa_allow_sales_order && invoiceType == 'Order'"
+          >
+    <v-menu
+    ref="order_delivery_time"
+    v-model="order_delivery_time"
+    :close-on-content-click="false"
+    transition="scale-transition"
+    dense
+    >
+    <template v-slot:activator="{ on, attrs }">
+    <v-text-field
+    v-model="invoice_doc.posa_delivery_time"
+    :label="frappe._('Delivery Time')"
+    readonly
+    outlined
+    dense
+    background-color="white"
+    clearable
+    color="primary"
+    hide-details
+    v-bind="attrs"
+    v-on="on"
+    ></v-text-field>
+    </template>
+    <v-time-picker
+    v-model="invoice_doc.posa_delivery_time"
+    color="primary"
+    @input="order_delivery_time = false"
+    >
+    </v-time-picker>
+    </v-menu>
+     </v-col>
+         
           <v-col cols="12" v-if="invoice_doc.posa_delivery_date">
             <v-autocomplete
               dense
@@ -1419,6 +1454,7 @@ export default {
       evntBus.$on("update_invoice_type", (data) => {
         this.invoiceType = data;
         if (this.invoice_doc && data != "Order") {
+          this.invoice_doc.posa_delivery_time = null;
           this.invoice_doc.posa_delivery_date = null;
           this.invoice_doc.posa_notes = null;
           this.invoice_doc.posa_notes = null;

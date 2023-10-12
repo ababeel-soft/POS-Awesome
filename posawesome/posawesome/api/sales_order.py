@@ -18,6 +18,8 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
                 "delivery_date",
                 "workflow_state",
                 "contact_mobile",
+                "custom_delivery_time",
+                "custom_notes"
             ]
 
     
@@ -67,16 +69,23 @@ def get_available_orders(company, currency):
     return orders_list
 
 @frappe.whitelist()
-def update_order(workflow_state,order_name):
+def update_order(workflow_state,custom_notes,order_name):
 
     doc =frappe.get_doc("Sales Order",order_name)
     doc.workflow_state=workflow_state
+    doc.custom_notes=custom_notes
     doc.save()
 
 
 @frappe.whitelist()
 def get_order_items (order):
-    print("omar essa")
     return frappe.get_all("Sales Order Item",fields="*",filters={"parent":order})
+
+
+@frappe.whitelist()
+def get_order_notes (order):
+    return frappe.get_all("Sales Order State Item",fields="*",filters={"parent":order ,"note":['!=',""]})
+
+
 
     

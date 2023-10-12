@@ -31,30 +31,10 @@
                 <v-text-field
                   dense
                   color="primary"
-                  :label="frappe._('Tax ID')"
-                  background-color="white"
-                  hide-details
-                  v-model="tax_id"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  dense
-                  color="primary"
                   :label="frappe._('Mobile No')"
                   background-color="white"
                   hide-details
                   v-model="mobile_no"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  dense
-                  color="primary"
-                  :label="frappe._('Email Id')"
-                  background-color="white"
-                  hide-details
-                  v-model="email_id"
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
@@ -65,17 +45,7 @@
                   v-model="gender"
                 ></v-select>
               </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  dense
-                  color="primary"
-                  :label="frappe._('Referral Code')"
-                  background-color="white"
-                  hide-details
-                  v-model="referral_code"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
+               <v-col cols="6">
                 <v-menu
                   ref="birthday_menu"
                   v-model="birthday_menu"

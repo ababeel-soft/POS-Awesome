@@ -2,7 +2,7 @@
   <div>
     <v-card
       class="selection mx-auto grey lighten-5 mt-3"
-      style="max-height: 75vh; height: 75vh"
+      style="max-height: 65vh; height: 65vh"
     >
       <v-progress-linear
         :active="loading"
@@ -129,15 +129,49 @@
     <v-card class="cards mb-0 mt-3 pa-2 grey lighten-5">
       <v-row no-gutters align="center" justify="center">
         <v-col cols="12">
-          <v-select
-            :items="items_group"
-            :label="frappe._('Items Group')"
-            dense
-            outlined
-            hide-details
-            v-model="item_group"
-            v-on:change="search_onchange"
-          ></v-select>
+<p>
+<strong>{{ __("Groups") }}</strong>
+</p>
+  <v-card
+  class="selection mx-auto grey lighten-5 mt-3"
+  style="max-height: 18vh; height:18vh"
+  >
+   
+   <v-col cols="12" class="pt-0 mt-0">
+<div fluid class="items" >
+            <v-row dense class="overflow-y-auto" style="max-height: 18vh">
+              <v-col
+                v-for="(doc_group, idx) in items_group"
+                :key="idx"
+                xl="2"
+                lg="2"
+                md="3"
+                sm="4"
+                cols="6"
+              >
+                <v-card hover="hover" @click="search_by_item_group(doc_group)" style="max-height: 7vh ; max-width: 15vh" >
+                  <v-img
+                    :src="
+                      doc_group.image ||
+                      '/assets/posawesome/js/posapp/components/pos/placeholder-image.png'
+                    "
+                    class="white--text align-end"
+                    gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4)"
+                    height="7vh"
+                  >
+                    <v-card-text
+                      v-text="doc_group.item_group_name"
+                      class="text-caption px-1 pb-0"
+                    ></v-card-text>
+                  </v-img>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </div>
+</v-col>
+  </v-card>
+
         </v-col>
         <v-col cols="3" class="mt-1">
           <v-btn-toggle
@@ -182,7 +216,7 @@ export default {
     items_view: 'list',
     item_group: 'ALL',
     loading: false,
-    items_group: ['ALL'],
+    items_group: [],
     items: [],
     search: '',
     first_search: '',
@@ -289,13 +323,6 @@ export default {
         console.log('No POS Profile');
         return;
       }
-      if (this.pos_profile.item_groups.length > 0) {
-        this.pos_profile.item_groups.forEach((element) => {
-          if (element.item_group !== 'All Item Groups') {
-            this.items_group.push(element.item_group);
-          }
-        });
-      } else {
         const vm = this;
         frappe.call({
           method: 'posawesome.posawesome.api.posapp.get_items_groups',
@@ -303,12 +330,15 @@ export default {
           callback: function (r) {
             if (r.message) {
               r.message.forEach((element) => {
-                vm.items_group.push(element.name);
+                  console.log(element);
+                  vm.items_group.push(element);
+                
+                
               });
             }
           },
         });
-      }
+      
     },
     getItmesHeaders() {
       const items_headers = [
@@ -333,6 +363,12 @@ export default {
       }
 
       return items_headers;
+    },
+    search_by_item_group(doc_group) {
+
+    const vm = this;
+    vm.item_group =doc_group.item_group_name
+    search_onchange()
     },
     add_item(item) {
       item = { ...item };
@@ -649,16 +685,6 @@ export default {
     });
     evntBus.$on('update_cur_items_details', () => {
      
-
-
-
-  
-
-
-
-
-
-
       this.update_cur_items_details();
     });
     evntBus.$on('update_offers_counters', (data) => {

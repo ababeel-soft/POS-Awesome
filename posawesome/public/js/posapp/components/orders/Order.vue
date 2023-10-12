@@ -56,7 +56,7 @@
                   color="warning"
                   dark
                   @click="get_sales_orders"
-                  >{{ __("Search") }}</v-btn
+                  >{{ __("Refresh") }}</v-btn
                 >
               </v-col>
             </v-row>
@@ -79,7 +79,7 @@
           <td>{{item.name}}</td>
           <td>{{item.customer}}</td>
           <td>{{item.delivery_date}}</td>
-          <td>{{item.grand_total}} {{ currencySymbol(pos_profile.currency) }}</td>
+          <td>{{item.custom_delivery_time}}</td>
           <td>{{item.workflow_state}}</td>
           </tr>
           
@@ -153,11 +153,11 @@ export default {
           sortable: true,
           value: "delivery_date",
         },
-        {
-          text: __("Total"),
+         {
+          text: __("Delivery Time"),
           align: "start",
           sortable: true,
-          value: "grand_total",
+          value: "custom_delivery_time",
         },
         {
           text: __("Status"),

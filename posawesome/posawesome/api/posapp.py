@@ -358,7 +358,7 @@ def get_root_of(doctype):
 def get_items_groups():
     return frappe.db.sql(
         """
-        select name 
+        select * 
         from `tabItem Group`
         where is_group = 0
         order by name
