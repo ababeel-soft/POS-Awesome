@@ -82,5 +82,12 @@
   "modified": "2023-10-10 10:57:15.390931",
   "name": "Restart",
   "workflow_action_name": "Restart"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-13 15:31:40.862318",
+  "name": "Photo",
+  "workflow_action_name": "Photo"
  }
 ]

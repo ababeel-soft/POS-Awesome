@@ -4,6 +4,7 @@
     <v-dialog
       v-model="OrderDialog"
       max-width="600px"
+      height="400px"
       @click:outside="clear_order"
     >
       <v-card>

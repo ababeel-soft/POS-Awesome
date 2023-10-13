@@ -88,5 +88,14 @@
   "name": "Processing",
   "style": "",
   "workflow_state_name": "Processing"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-13 15:31:07.179722",
+  "name": "Photo Done",
+  "style": "",
+  "workflow_state_name": "Photo Done"
  }
 ]
