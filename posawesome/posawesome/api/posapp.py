@@ -1768,4 +1768,6 @@ def get_product_bundle_items(item):
 def get_workflow_status():
     return frappe.get_all("Workflow State",fields="name",pluck="name")
 
-    
+@frappe.whitelist()
+def get_workstations():
+    return frappe.get_all("Workstation",fields="workstation_name",pluck="workstation_name")

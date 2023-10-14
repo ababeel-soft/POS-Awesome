@@ -41,7 +41,7 @@
                   v-model="pos_profile_search"
                   :items="pos_profiles_list"
                   item-value="name"
-                  label="Select POS Profile"
+                  :label="frappe._('Select POS Profile')"
                 ></v-select>
               </v-col>
               <v-col> </v-col>
@@ -212,7 +212,7 @@
           style="max-height: 94vh; height: 94vh"
         >
           <strong>
-            <h4 class="primary--text">Totals</h4>
+            <h4 class="primary--text">{{__("Totals")}}</h4>
             <v-row>
               <v-col md="7" class="mt-1">
                 <span>{{ __("Total Invoices:") }}</span>
@@ -275,7 +275,7 @@
 
             <v-divider v-if="payment_methods.length"></v-divider>
             <div v-if="pos_profile.posa_allow_make_new_payments">
-              <h4 class="primary--text">Make New Payment</h4>
+              <h4 class="primary--text">{{ __("Make New Payment") }}</h4>
               <v-row
                 v-if="payment_methods.length"
                 v-for="method in payment_methods"

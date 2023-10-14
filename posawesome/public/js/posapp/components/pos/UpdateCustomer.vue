@@ -40,42 +40,10 @@
               <v-col cols="6">
                 <v-select
                   dense
-                  label="Gender"
+                  :label="frappe._('Gender')"
                   :items="genders"
                   v-model="gender"
                 ></v-select>
-              </v-col>
-               <v-col cols="6">
-                <v-menu
-                  ref="birthday_menu"
-                  v-model="birthday_menu"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  dense
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="birthday"
-                      :label="frappe._('Birthday')"
-                      readonly
-                      dense
-                      clearable
-                      hide-details
-                      v-bind="attrs"
-                      v-on="on"
-                      color="primary"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="birthday"
-                    color="primary"
-                    no-title
-                    scrollable
-                    :max="frappe.datetime.now_date()"
-                    @input="birthday_menu = false"
-                  >
-                  </v-date-picker>
-                </v-menu>
               </v-col>
               <v-col cols="6">
                 <v-autocomplete

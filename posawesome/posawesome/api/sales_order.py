@@ -7,7 +7,9 @@ from frappe import _
 
 
 @frappe.whitelist()
-def get_orders(company, currency, customer=None, sales_order_search=None,order_status_search=""):
+def get_orders(company, currency, customer=None, sales_order_search=None,order_status_search="",workstation_search=""):
+
+    
     filters={}
     fields=[
                 "name",
@@ -19,7 +21,8 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
                 "workflow_state",
                 "contact_mobile",
                 "custom_delivery_time",
-                "custom_notes"
+                "custom_notes",
+                "workstation"
             ]
 
     
@@ -28,6 +31,9 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
         filters.update({"name": sales_order_search})
     if order_status_search !="":
         filters.update({"workflow_state": order_status_search})
+
+    if workstation_search !="":
+        filters.update({"workstation": workstation_search})
     if customer:
       
         filters.update({"customer": customer})
@@ -47,7 +53,10 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
         
         if order_status_search !="":
             filters.update({"workflow_state": order_status_search})
-
+        
+        if workstation_search !="":
+            filters.update({"workstation": workstation_search})
+        
         if customer:
             filters.update({"customer": customer})
         orders = frappe.get_all(
@@ -69,10 +78,12 @@ def get_available_orders(company, currency):
     return orders_list
 
 @frappe.whitelist()
-def update_order(workflow_state,custom_notes,order_name):
+def update_order(workflow_state,custom_notes,order_name,workstation=None):
 
     doc =frappe.get_doc("Sales Order",order_name)
     doc.workflow_state=workflow_state
+    if workstation:
+        doc.workstation=workstation
     doc.custom_notes=custom_notes
     doc.save()
 

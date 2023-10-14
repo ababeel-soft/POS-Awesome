@@ -49,6 +49,9 @@
             v-model="invoiceType"
             :disabled="invoiceType == 'Return'"
           ></v-select>
+
+      
+
         </v-col>
       </v-row>
 
@@ -841,6 +844,7 @@ export default {
       allItems: [],
       discount_percentage_offer_name: null,
       invoiceTypes: ["Invoice", "Order"],
+      options : [{ text: "XXX.A", value: 0 },{ text: "XXX.B", value: 1 },{ text: "XXX.C", value: 3 }],
       invoiceType: "Invoice",
       itemsPerPage: 1000,
       expanded: [],

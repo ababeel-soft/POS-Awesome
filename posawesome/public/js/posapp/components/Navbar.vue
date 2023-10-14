@@ -11,7 +11,7 @@
         style="cursor: pointer"
         class="text-uppercase primary--text"
       >
-        <span class="font-weight-light">POS</span>
+        <span class="font-weight-light">ABABEEL POS</span>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -19,10 +19,10 @@
         <span right>{{ pos_profile.name }}</span>
       </v-btn>
       <div class="text-center">
-        <v-menu offset-y>
+        <v-menu offset-y >
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" dark text v-bind="attrs" v-on="on"
-              >Menu</v-btn
+              > {{__('Menu')}}</v-btn
             >
           </template>
           <v-card class="mx-auto" max-width="300" tile>
@@ -81,6 +81,7 @@
       </div>
     </v-app-bar>
     <v-navigation-drawer
+      right
       v-model="drawer"
       :mini-variant.sync="mini"
       app
@@ -100,7 +101,7 @@
           </v-btn>
         </v-list-item>
         <!-- <MyPopup/> -->
-        <v-list-item-group v-model="item" color="white">
+        <v-list-item-group v-model="item" color="white" >
           <v-list-item
             v-for="item in items"
             :key="item.text"
@@ -110,13 +111,14 @@
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title v-text="item.text"></v-list-item-title>
+
+              <v-list-item-title >{{ __(item.text)}}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <v-snackbar v-model="snack" :timeout="5000" :color="snackColor" top right>
+    <v-snackbar v-model="snack" :timeout="5000" :color="snackColor" top right >
       {{ snackText }}
     </v-snackbar>
     <v-dialog v-model="freeze" persistent max-width="290">

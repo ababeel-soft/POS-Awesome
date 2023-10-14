@@ -10,7 +10,7 @@
       <v-card>
         <v-card-title>
           <span v-if="customer" class="headline primary--text">{{
-            __('Update Order')
+            __('Order')
           }}</span>
         </v-card-title>
         <v-card-text class="pa-0">
@@ -121,25 +121,24 @@
                 >
                 </v-autocomplete>
               </v-col>
+
+               <v-col cols="6">
+                <v-autocomplete
+                  
+                  dense
+                  color="primary"
+                  :label="frappe._('Workstation')"
+                  v-model="workstation_search"
+                  :items="workstations"
+                  background-color="white"
+                  :no-data-text="__('Workstations not found')"
+                  v-bind:readonly="complate"
+                  hide-details
+                  required
+                >
+                </v-autocomplete>
+              </v-col>
               
-              <v-col cols="6" v-if="loyalty_program">
-                <v-text-field
-                  v-model="loyalty_program"
-                  :label="frappe._('Loyalty Program')"
-                  dense
-                  readonly
-                  hide-details
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6" v-if="loyalty_points">
-                <v-text-field
-                  v-model="loyalty_points"
-                  :label="frappe._('Loyalty Points')"
-                  dense
-                  readonly
-                  hide-details
-                ></v-text-field>
-              </v-col>
             </v-row>
              <v-row justify="center">
           <v-container>
@@ -210,33 +209,56 @@
           <v-btn color="error" dark @click="close_dialog">{{
             __('Close')
           }}</v-btn>
-            <v-btn color="success"  v-if="starter" dark @click="submit_dialog">{{
+            <v-btn color="primary"  v-if="start" dark @click="submit_dialog('Processing')">{{
             __('Start')
           }}</v-btn>
-           <v-btn color="primary"  v-if="ender" dark @click="submit_dialog">{{
-            __('End')
+           <v-btn color="primary"  v-if="restart" dark @click="submit_dialog('Processing')">{{
+            __('Restart')
+          }}</v-btn>
+           <v-btn color="success"  v-if="complate" dark @click="submit_dialog('Completed')">{{
+            __('Complate')
+          }}</v-btn>
+           <v-btn color="primary"  v-if="ready" dark @click="submit_dialog('Ready To Delivery')">{{
+            __('Ready')
+          }}</v-btn>
+           <v-btn color="#3F51B5"  v-if="reject" dark @click="submit_dialog('Quality Rejected')">{{
+            __('Reject')
+          }}</v-btn>
+           <v-btn color="primary"  v-if="delivery" dark @click="submit_dialog('Delivery')">{{
+            __('Delivery')
+          }}</v-btn>
+           <v-btn color="primary"  v-if="delivery_service" dark @click="submit_dialog('On Delivery')">{{
+            __('Delivery Service')
+          }}</v-btn>
+            <v-btn color="primary"  v-if="inspect" dark @click="submit_dialog('Quality Inspection')">{{
+            __('Inspect')
+          }}</v-btn>
+           <v-btn color="primary"  v-if="photo" dark @click="submit_dialog('Photo Done')">{{
+            __('Photo')
           }}</v-btn>
         </v-card-actions>
-         <v-container v-if="has_notes">
-        <p style="color:red"><strong>{{ __("Notes") }}</strong></p>
-          <v-data-table
-          :headers="notes_headers"
-          :items="order_notes"
-          item-key="to_state"
-          class="elevation-1 mt-0"
-          v-model="order_notes"
-          >
 
-          <template v-slot:item="{ item }">
-          <tr >
-          <td>{{item.to_state}}</td>
-          <td>{{item.note}}</td>
-          </tr>
+      <v-container v-if="has_notes">
+      <p style="color:red"><strong>{{ __("Notes") }}</strong></p>
+      <v-data-table
+      :headers="notes_headers"
+      :items="order_notes"
+      item-key="to_state"
+      class="elevation-1 mt-0"
+      v-model="order_notes"
+      >
 
-          </template>
+      <template v-slot:item="{ item }">
+      <tr >
+      <td>{{item.to_state}}</td>
+      <td>{{item.note}}</td>
+      </tr>
 
-          </v-data-table>
- </v-container>
+      </template>
+
+      </v-data-table>
+      </v-container>
+
       </v-card>
     </v-dialog>
   </v-row>
@@ -248,15 +270,26 @@ import { evntBus } from '../../bus';
 export default {
   data: () => ({
     OrderDialog: false,
+    delivery_date_menu:[],
     customer: '',
     contact_mobile: '',
     workflow_state: '',
     workflowstatus: [],
+    workstations: [],
+    workstation_search:"",
     custom_notes:'',
     order_notes:[],
     has_notes:false,
-    starter:false,
-    ender:false,
+    start:false,
+    complate:false,
+    restart:false,
+    ready:false,
+    reject:false,
+    delivery:false,
+    delivery_service:false,
+    quality_inspection:false,
+    inspect:false,
+    photo:false,
     delivery_date : '',
     custom_delivery_time:'',
     order_name: '',
@@ -290,6 +323,7 @@ export default {
       contact_mobile = '',
       workflow_state = '',
       workflowstatus = [],
+      workstations=[],
       custom_notes ='',
       order_notes=[],
       delivery_date = '',
@@ -297,6 +331,18 @@ export default {
       filterdItems = []
      
     },
+    disable_buttons(vm){
+    vm.start =false,
+    vm.complate =false,
+    vm.restart =false,
+    vm.ready =false,
+    vm.reject =false,
+    vm.delivery =false,
+    vm.delivery_service =false,
+    vm.quality_inspection =false,
+    vm.inspect =false
+    vm.photo=false
+  },
     getWorkflowState() {
       if (this.workflowstatus.length > 0) return;
       const vm = this;
@@ -314,23 +360,28 @@ export default {
           }
         });
     },
+      get_workstations() {
+     
+      frappe.call("posawesome.posawesome.api.posapp.get_workstations")
+        .then((r) => {
+          if (r.message) {
+            console.log(r.message);
+            this.workstations = r.message;
+          }
+        });
+    },
      show_image(item,show) {
      evntBus.$emit("open_image_dialog",item,show);
      },
 
-    submit_dialog() {
+    submit_dialog(new_state) {
         const vm = this;
-         if (vm.starter){
-          this.workflow_state="Processing"
-        }if (vm.ender){
-          this.workflow_state="Quality Inspection"
-        }
-
-       
+        this.workflow_state=new_state;
         const args = {
           customer : this.customer,
           contact_mobile : this.contact_mobile,
           workflow_state : this.workflow_state,
+          workstation:this.workstation_search,
           delivery_date :this.delivery_date,
           custom_notes:this.custom_notes,
           custom_delivery_time : this.custom_delivery_time,
@@ -387,13 +438,12 @@ export default {
          }
         }
       });
-  }
+  },
+ 
   },
   created: function () {
     evntBus.$on('open_update_order', (data) => {
   
-      console.log(data);
-
       this.OrderDialog = true;
       
       if (data) {
@@ -402,21 +452,45 @@ export default {
         this.delivery_date = data.delivery_date;
         this.custom_delivery_time =data.custom_delivery_time;
         this.workflow_state = data.workflow_state;
+        this.workstation_search = data.workstation;
         this.contact_mobile = data.contact_mobile;
         this.custom_notes="";
         this.get_order_items(data.name);
         this.get_order_notes(data.name);
       }
 
-      if(data.workflow_state =="Pending" || data.workflow_state == "Quality Rejected"){
-      this.starter=true;
-      this.ender=false;
-      }else if(data.workflow_state =="Processing"){
-      this.ender=true;
-      this.starter=false;
-      }else{
-        this.starter=false;
-        this.ender=false;
+      this.disable_buttons(this);
+      switch(data.workflow_state) {
+      case "Pending":
+       this.start=true;
+      break;
+      case "Processing":
+      this.complate=true;
+      break;
+      case "Quality Inspection":
+      this.reject=true;
+      this.photo=true;
+      break;
+      case "Completed":
+      this.inspect=true;
+      break;
+      case "Quality Rejected":
+      this.restart=true;
+      break;
+       case "Re Processing":
+      this.complate=true;
+      break;
+       case "Ready To Delivery":
+      this.delivery_service=true;
+      this.delivery=true;
+      break;
+      case "On Delivery":
+      this.delivery=true;
+      break;
+      case "Photo Done":
+      this.ready=true;
+      break;
+      default:
       }
 
     });
@@ -427,6 +501,8 @@ export default {
       this.pos_profile = data.pos_profile;
     });
     this.getWorkflowState();
+    this.get_workstations();
+   
   
    
   },

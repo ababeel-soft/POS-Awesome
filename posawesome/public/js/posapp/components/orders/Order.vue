@@ -31,7 +31,7 @@
                   v-model="sales_order_search"
                   :items="sales_order_list"
                   item-value="name"
-                  label="Search by Name"
+                  :label="frappe._('Search by Name')"
                   @change="get_sales_orders"
                 ></v-autocomplete>
               </v-col>
@@ -45,12 +45,26 @@
                   v-model="order_status_search"
                   :items="order_status_list"
                   item-value="name"
-                  label="Status"
+                  :label="frappe._('Status')"
+                  @change="get_sales_orders"
+                ></v-select>
+              </v-col>
+               <v-col md="2" cols="8" class="ma-2"> 
+                <v-select
+                  dense
+                  outlined
+                  hide-details
+                  clearable
+                  background-color="white"
+                  v-model="workstation_search"
+                  :items="workstations"
+                  item-value="name"
+                  :label="frappe._('Workstation')"
                   @change="get_sales_orders"
                 ></v-select>
               </v-col>
               <v-col> </v-col>
-              <v-col md="3" cols="12">
+              <v-col md="2" cols="12">
                 <v-btn
                   block
                   color="warning"
@@ -80,7 +94,7 @@
           <td>{{item.customer}}</td>
           <td>{{item.delivery_date}}</td>
           <td>{{item.custom_delivery_time}}</td>
-          <td>{{item.workflow_state}}</td>
+          <td>{{ __(item.workflow_state)}}</td>
           </tr>
           
           </template>
@@ -128,6 +142,8 @@ export default {
       selected_mpesa_payments: [],
       sales_order_list: [],
       order_status_list: [],
+      workstations: [],
+      workstation_search:"",
       sales_order_search: "",
       order_status_search: "",
       payment_methods_list: [],
@@ -288,7 +304,8 @@ export default {
             company: this.company,
             currency: this.pos_profile.currency,
             sales_order_search: this.sales_order_search,
-            order_status_search:this.order_status_search
+            order_status_search:this.order_status_search,
+            workstation_search:this.workstation_search
           }
         )
         .then((r) => {
@@ -304,6 +321,15 @@ export default {
         .then((r) => {
           if (r.message) {
             this.order_status_list = r.message;
+          }
+        });
+    },
+     get_workstations() {
+     
+      frappe.call("posawesome.posawesome.api.posapp.get_workstations")
+        .then((r) => {
+          if (r.message) {
+            this.workstations = r.message;
           }
         });
     },
@@ -527,6 +553,7 @@ export default {
     });
 
     this.get_workflow_status();
+    this.get_workstations();
   },
   beforeDestroy() {
     evntBus.$off("update_customer");
