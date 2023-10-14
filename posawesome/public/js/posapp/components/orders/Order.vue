@@ -287,12 +287,7 @@ export default {
     },
 
     rowClicked(item){
-      if (item.workflow_state !="Delivery"){
-        evntBus.$emit("open_update_order",item);
-      }else{
-        evntBus.$emit("open_order_evaluation",item);
-      }
-      
+      evntBus.$emit("open_update_order",item);
     },
     get_sales_orders() {
       this.invoices_loading = true;
