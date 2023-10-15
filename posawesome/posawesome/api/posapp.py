@@ -869,11 +869,9 @@ def delete_invoice(invoice):
 
 @frappe.whitelist()
 def get_items_details(pos_profile, items_data):
-    _pos_profile = json.loads(pos_profile)
-    print(_pos_profile)
+    _pos_profile = pos_profile
     return
     #_pos_profile = frappe.get_doc("POS Profile",)
-    print(pos_profile.name)
     ttl = _pos_profile.get("posa_server_cache_duration")
     if ttl:
         ttl = int(ttl) * 60

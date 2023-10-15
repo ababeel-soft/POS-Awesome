@@ -194,27 +194,6 @@ export default {
   },
 
   methods: {
-    handleFileUpload(event) {
-    this.selectedFile = event.target.files[0];
-
-    
-
-    const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000'
-    });
-    let formData = new FormData();
-    formData.append('file', this.selectedFile);
-
-    instance.post('/files', formData)
-    .then(response => {
-    console.log('File uploaded successfully:', response.data);
-    })
-    .catch(error => {
-    console.error('Error uploading file:', error);
-    });
-
-    
-  },
     check_opening_entry() {
       return frappe
         .call("posawesome.posawesome.api.posapp.check_opening_shift", {
