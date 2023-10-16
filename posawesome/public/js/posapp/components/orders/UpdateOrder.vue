@@ -343,6 +343,41 @@ export default {
     vm.inspect =false
     vm.photo=false
   },
+   show_buttons(vm){
+    this.disable_buttons(vm);
+      switch(vm.workflow_state) {
+      case "Pending":
+       vm.start=true;
+      break;
+      case "Processing":
+      vm.complate=true;
+      break;
+      case "Quality Inspection":
+      vm.reject=true;
+      vm.photo=true;
+      break;
+      case "Completed":
+      vm.inspect=true;
+      break;
+      case "Quality Rejected":
+      vm.restart=true;
+      break;
+       case "Re Processing":
+      vm.complate=true;
+      break;
+       case "Ready To Delivery":
+      vm.delivery_service=true;
+      vm.delivery=true;
+      break;
+      case "On Delivery":
+      vm.delivery=true;
+      break;
+      case "Photo Done":
+      vm.ready=true;
+      break;
+      default:
+      }
+  },
     getWorkflowState() {
       if (this.workflowstatus.length > 0) return;
       const vm = this;
@@ -398,13 +433,15 @@ export default {
                 text: text,
                 color: 'success',
               });
-              frappe.utils.play_sound('submit');
+              //frappe.utils.play_sound('submit');
               evntBus.$emit("show_list");
-              this.close_dialog();
+              //this.close_dialog();
+              this.show_buttons(this);
+              this.get_order_notes(this.order_name);
           
           },
         });
-        this.OrderDialog = false;
+        //this.OrderDialog = false;
       
     },
     get_order_items(order) {
@@ -458,40 +495,7 @@ export default {
         this.get_order_items(data.name);
         this.get_order_notes(data.name);
       }
-
-      this.disable_buttons(this);
-      switch(data.workflow_state) {
-      case "Pending":
-       this.start=true;
-      break;
-      case "Processing":
-      this.complate=true;
-      break;
-      case "Quality Inspection":
-      this.reject=true;
-      this.photo=true;
-      break;
-      case "Completed":
-      this.inspect=true;
-      break;
-      case "Quality Rejected":
-      this.restart=true;
-      break;
-       case "Re Processing":
-      this.complate=true;
-      break;
-       case "Ready To Delivery":
-      this.delivery_service=true;
-      this.delivery=true;
-      break;
-      case "On Delivery":
-      this.delivery=true;
-      break;
-      case "Photo Done":
-      this.ready=true;
-      break;
-      default:
-      }
+      this.show_buttons(this);
 
     });
     evntBus.$on('register_pos_profile', (data) => {

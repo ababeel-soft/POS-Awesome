@@ -194,6 +194,7 @@ export default {
   },
 
   methods: {
+
     check_opening_entry() {
       return frappe
         .call("posawesome.posawesome.api.posapp.check_opening_shift", {
