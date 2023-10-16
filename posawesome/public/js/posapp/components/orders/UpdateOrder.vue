@@ -437,6 +437,7 @@ export default {
               evntBus.$emit("show_list");
               //this.close_dialog();
               this.show_buttons(this);
+              this.custom_notes='';
               this.get_order_notes(this.order_name);
           
           },
