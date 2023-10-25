@@ -423,7 +423,7 @@
         v-html="data.item.name"
         ></v-list-item-title>
         <v-list-item-subtitle
-        v-html="`Rate: ${data.item.rate}`"
+        v-html="`السعر: ${data.item.rate}`"
         ></v-list-item-subtitle>
         </v-list-item-content>
         </template>
