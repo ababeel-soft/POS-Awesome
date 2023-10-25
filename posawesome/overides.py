@@ -8,21 +8,36 @@ import random
 
 class CustomSalesOrder(SalesOrder):
 
+    def before_submit(self):
+        desc =""
+        for item in self.items:
+            item_doc = frappe.get_doc("Item",item.item_code)
+            item_name =""
+            if item_doc.variant_of:
+                item_name=item_doc.variant_of
+            else:
+                item_name=item_doc.item_code
+            
+            if self.items.index(item) > 0 :
+                desc+="+"
+            desc+=item_name
+
+        self.custom_order_description=desc
+
     def before_update_after_submit(self):
-        self.create_item()
+        #self.create_item()
         self.change_state()
 
     def validate(self):
         self.change_state()
         
-    def add_row_note(self, state):
+    def add_row_note(self, state,notes):
         row = self.append('sales_order_statuses', {})
         row.from_state = state
         row.to_state = self.workflow_state
         row.user =session.user
-        if self.custom_notes:
-            row.note =self.custom_notes
-            self.custom_notes=""
+        if notes:
+            row.note =notes
         self.user=session.user
         row.time = datetime.now().time()
         row.date = date.today()
@@ -31,7 +46,13 @@ class CustomSalesOrder(SalesOrder):
         old_doc = self.get_doc_before_save()
         if old_doc:
             if(old_doc.workflow_state != self.workflow_state):
-                self.add_row_note(old_doc.workflow_state)
+                if self.custom_notes:
+                    self.add_row_note(old_doc.workflow_state,self.custom_notes)
+                    self.custom_notes=""
+        else:
+            if self.posa_notes:
+                self.add_row_note("Draft",self.posa_notes)
+            
 
     def create_item(self):
         if self.workflow_state=="Delivery" and self.bundle_details:

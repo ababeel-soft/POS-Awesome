@@ -38,14 +38,6 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="6">
-                <v-select
-                  dense
-                  :label="frappe._('Gender')"
-                  :items="genders"
-                  v-model="gender"
-                ></v-select>
-              </v-col>
-              <v-col cols="6">
                 <v-autocomplete
                   clearable
                   dense
@@ -56,22 +48,6 @@
                   :items="groups"
                   background-color="white"
                   :no-data-text="__('Group not found')"
-                  hide-details
-                  required
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="6">
-                <v-autocomplete
-                  clearable
-                  dense
-                  auto-select-first
-                  color="primary"
-                  :label="frappe._('Territory') + ' *'"
-                  v-model="territory"
-                  :items="territorys"
-                  background-color="white"
-                  :no-data-text="__('Territory not found')"
                   hide-details
                   required
                 >

@@ -10,7 +10,7 @@
         <v-card-text class="pa-0">
           <v-container>
             <v-row>
-              <v-col cols="12" class="pa-1">
+              <v-col cols="12" class="paF-1">
                 <template>
                   <v-data-table
                     :headers="headers"

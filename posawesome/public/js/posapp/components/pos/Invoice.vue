@@ -592,7 +592,7 @@
                           color="primary"
                           @click="item.item_delivery_date = false"
                         >
-                          Cancel
+                          {{__("Cancel")}}
                         </v-btn>
                         <v-btn
                           text

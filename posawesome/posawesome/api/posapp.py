@@ -1683,6 +1683,13 @@ def get_applicable_delivery_charges(
     return _get_applicable_delivery_charges(
         company, pos_profile, customer, shipping_address_name
     )
+@frappe.whitelist()
+def get_applicable_delivery_charges_from_payment(
+    company, pos_profile=None, customer=None, shipping_address_name=None
+):
+    return _get_applicable_delivery_charges(
+        company, pos_profile, customer, shipping_address_name
+    )
 
 
 def auto_create_items():
@@ -1768,4 +1775,12 @@ def get_workflow_status():
 
 @frappe.whitelist()
 def get_workstations():
-    return frappe.get_all("Workstation",fields="workstation_name",pluck="workstation_name")
+    return frappe.get_list("Workstation",fields="workstation_name",pluck="workstation_name")
+
+@frappe.whitelist()
+def update_workstation(order_name,workstation,custom_notes=None):
+    doc =frappe.get_doc("Sales Order",order_name)
+    doc.workstation=workstation
+    if custom_notes:
+        doc.custom_notes=custom_notes
+    doc.save()

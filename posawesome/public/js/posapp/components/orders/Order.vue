@@ -94,7 +94,7 @@
           <td>{{item.customer}}</td>
           <td>{{item.delivery_date}}</td>
           <td>{{item.custom_delivery_time}}</td>
-          <td>{{ __(item.workflow_state)}}</td>
+          <td :style=get_color(item.workflow_state)>{{ __(item.workflow_state)}}</td>
           </tr>
           
           </template>
@@ -194,6 +194,53 @@ export default {
   },
 
   methods: {
+
+    get_color(workflow_state){
+
+      let color ="color :black";
+
+      switch(workflow_state) {
+      case "Pending":
+      color ="color : black";
+      break;
+      case "Processing":
+      color ="color :Orange";
+      break;
+      case "Quality Inspection":
+      color ="color :Red";
+      break;
+      case "Completed":
+      color ="color :Indigo";
+      break;
+      case "Quality Rejected":
+      color ="color :Red";
+      break;
+      case "Re Processing":
+      color ="color :blue";
+      break;
+      case "Ready To Delivery":
+      color ="color :LimeGreen";
+      break;
+      case "On Delivery":
+      color ="color :blue";
+      break;
+      case "Picturing":
+      color ="color :DimGray";
+      break;
+      case "Delivery":  
+      color ="color :OrangeRed";
+      break;
+      case "Ready To Shipping":
+      color ="color :#11249B";
+      break;
+      case "Ready To Call":
+      color ="color :#FF6EC7";
+      break;
+      default:
+      }
+
+    return color;
+    },
 
     check_opening_entry() {
       return frappe

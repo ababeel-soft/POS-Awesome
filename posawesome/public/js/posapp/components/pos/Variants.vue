@@ -3,9 +3,9 @@
     <v-dialog v-model="varaintsDialog" max-width="600px">
       <v-card min-height="500px">
         <v-card-title>
-          <span class="headline primary--text">Select Item</span>
+          <span class="headline primary--text">{{__("Select Item")}}</span>
           <v-spacer></v-spacer>
-          <v-btn color="error" dark @click="close_dialog">Close</v-btn>
+          <v-btn color="error" dark @click="close_dialog">{{__("Close")}}</v-btn>
         </v-card-title>
         <v-card-text class="pa-0">
           <v-container v-if="parentItem">
@@ -135,8 +135,8 @@ export default {
       });
     },
     add_item(item) {
-      evntBus.$emit('add_item', item);
-      this.close_dialog();
+       evntBus.$emit('open_qty_model', item);
+      //this.close_dialog();
     },
   },
 

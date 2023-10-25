@@ -9,7 +9,6 @@ from frappe import _
 @frappe.whitelist()
 def get_orders(company, currency, customer=None, sales_order_search=None,order_status_search="",workstation_search=""):
 
-    
     filters={}
     fields=[
                 "name",
@@ -22,22 +21,29 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
                 "contact_mobile",
                 "custom_delivery_time",
                 "custom_notes",
-                "workstation"
+                "workstation",
+                "custom_order_description"
             ]
 
+    
     
     orders_list = []
     if sales_order_search:
         filters.update({"name": sales_order_search})
     if order_status_search !="":
         filters.update({"workflow_state": order_status_search})
-
+   
     if workstation_search !="":
         filters.update({"workstation": workstation_search})
+    else:
+        if "Workstation" not in frappe.get_roles():
+            filters["workstation"] = ["!=",""]
+
+
     if customer:
       
         filters.update({"customer": customer})
-        orders_docs_list =frappe.get_all("Sales Order",filters=filters,fields=fields)
+        orders_docs_list =frappe.get_list("Sales Order",filters=filters,fields=fields)
         
         customer_name = frappe.get_cached_value("Customer", customer, "customer_name")
         
@@ -56,10 +62,13 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
         
         if workstation_search !="":
             filters.update({"workstation": workstation_search})
+        else:
+            if "Workstation" not in frappe.get_roles():
+                filters["workstation"] = ["!=",""]
         
         if customer:
             filters.update({"customer": customer})
-        orders = frappe.get_all(
+        orders = frappe.get_list(
             "Sales Order",
             filters=filters,
             fields=fields,
@@ -86,6 +95,9 @@ def update_order(workflow_state,custom_notes,order_name,workstation=None):
         doc.workstation=workstation
     doc.custom_notes=custom_notes
     doc.save()
+
+
+
 
 
 @frappe.whitelist()

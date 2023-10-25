@@ -247,19 +247,6 @@
               dense
               outlined
               color="primary"
-              :label="frappe._('Tax and Charges')"
-              background-color="white"
-              hide-details
-              :value="formtCurrency(invoice_doc.total_taxes_and_charges)"
-              disabled
-              :prefix="currencySymbol(invoice_doc.currency)"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              dense
-              outlined
-              color="primary"
               :label="frappe._('Total Amount')"
               background-color="white"
               hide-details
@@ -277,32 +264,6 @@
               background-color="white"
               hide-details
               :value="formtCurrency(invoice_doc.discount_amount)"
-              disabled
-              :prefix="currencySymbol(invoice_doc.currency)"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="6">
-            <v-text-field
-              dense
-              outlined
-              color="primary"
-              :label="frappe._('Grand Total')"
-              background-color="white"
-              hide-details
-              :value="formtCurrency(invoice_doc.grand_total)"
-              disabled
-              :prefix="currencySymbol(invoice_doc.currency)"
-            ></v-text-field>
-          </v-col>
-          <v-col v-if="invoice_doc.rounded_total" cols="6">
-            <v-text-field
-              dense
-              outlined
-              color="primary"
-              :label="frappe._('Rounded Total')"
-              background-color="white"
-              hide-details
-              :value="formtCurrency(invoice_doc.rounded_total)"
               disabled
               :prefix="currencySymbol(invoice_doc.currency)"
             ></v-text-field>
@@ -379,7 +340,7 @@
     </v-menu>
      </v-col>
          
-          <v-col cols="12" v-if="invoice_doc.posa_delivery_date">
+          <v-col cols="6" v-if="invoice_doc.posa_delivery_date">
             <v-autocomplete
               dense
               clearable
@@ -433,6 +394,43 @@
               </template>
             </v-autocomplete>
           </v-col>
+
+
+        <v-col cols="6"  v-if="invoice_doc.shipping_address_name">
+        <v-autocomplete
+        dense
+        clearable
+        auto-select-first
+        outlined
+        color="primary"
+        :label="frappe._('Delivery Charges')"
+        v-model="selcted_delivery_charges"
+        :items="delivery_charges"
+        item-text="name"
+        return-object
+        background-color="white"
+        :no-data-text="__('Charges not found')"
+        hide-details
+        :filter="deliveryChargesFilter"
+        :disabled="readonly"
+        @change="update_delivery_charges()"
+        >
+        <template v-slot:item="data">
+        <template>
+        <v-list-item-content>
+        <v-list-item-title
+        class="primary--text subtitle-1"
+        v-html="data.item.name"
+        ></v-list-item-title>
+        <v-list-item-subtitle
+        v-html="`Rate: ${data.item.rate}`"
+        ></v-list-item-subtitle>
+        </v-list-item-content>
+        </template>
+        </template>
+        </v-autocomplete>
+        </v-col>
+       
            <v-col cols="6" v-if="pos_profile.posa_allow_sales_order && invoiceType == 'Order'">
             <v-text-field
               class="pa-0"
@@ -651,6 +649,7 @@
           </v-row>
         </div>
         <v-divider></v-divider>
+
         <v-row class="pb-0 mb-2" align="start">
           <v-col cols="12">
             <v-autocomplete
@@ -794,6 +793,9 @@ export default {
     pos_settings: "",
     customer_info: "",
     mpesa_modes: [],
+    delivery_charges: [],
+    delivery_charges_rate: 0,
+    selcted_delivery_charges: {},
   }),
 
   methods: {
@@ -951,6 +953,10 @@ export default {
          evntBus.$emit("add_bundle",null);
       }
 
+      if (this.selcted_delivery_charges) {
+        this.invoice_doc.posa_delivery_charges=this.selcted_delivery_charges.name;
+        this.invoice_doc.posa_delivery_charges_rate = this.delivery_charges_rate || 0;
+      }
       const vm = this;
       frappe.call({
         method: "posawesome.posawesome.api.posapp.submit_invoice",
@@ -1323,7 +1329,37 @@ export default {
       },
       reset_bundle(){
       this.bundle_details="";
-      }
+      },
+      set_delivery_charges() {
+      const vm = this;
+      frappe.call({
+        method:
+          "posawesome.posawesome.api.posapp.get_applicable_delivery_charges_from_payment",
+        args: {
+          company: this.pos_profile.company,
+          pos_profile: this.pos_profile.name,
+          customer: this.customer,
+        },
+        async: true,
+        callback: function (r) {
+          if (r.message) {
+            vm.delivery_charges = r.message;
+          }
+        },
+      });
+    },
+     update_delivery_charges() {
+        if(this.selcted_delivery_charges){
+        this.invoice_doc.posa_delivery_charges=this.selcted_delivery_charges.name;
+        this.invoice_doc.posa_delivery_charges_rate=this.selcted_delivery_charges.rate;
+        this.diff_payment();
+        }else{
+          this.invoice_doc.posa_delivery_charges_rate=0;
+          this.diff_payment();
+        }
+
+        
+    },
   },
 
   computed: {
@@ -1335,15 +1371,19 @@ export default {
         });
       }
 
-      total += this.flt(this.redeemed_customer_credit);
+      total+= this.flt(this.redeemed_customer_credit);
 
       if (!this.is_cashback) total = 0;
 
       return this.flt(total, this.currency_precision);
     },
     diff_payment() {
+      let dc=0;
+      if (this.invoice_doc.posa_delivery_charges_rate){
+        dc =this.invoice_doc.posa_delivery_charges_rate;
+      }
       let diff_payment = this.flt(
-        (this.invoice_doc.rounded_total || this.invoice_doc.grand_total) -
+        ((this.invoice_doc.rounded_total || this.invoice_doc.grand_total)+dc) -
           this.total_payments,
         this.currency_precision
       );
@@ -1421,6 +1461,7 @@ export default {
     this.$nextTick(function () {
       evntBus.$on("send_invoice_doc_payment", (invoice_doc) => {
         this.invoice_doc = invoice_doc;
+        this.invoice_doc.shipping_address_name=null;
         const default_payment = this.invoice_doc.payments.find(
           (payment) => payment.default == 1
         );
@@ -1442,6 +1483,8 @@ export default {
         this.loyalty_amount = 0;
         this.get_addresses();
         this.get_sales_person_names();
+        this.selcted_delivery_charges={};
+        this.set_delivery_charges();
       });
       evntBus.$on("register_pos_profile", (data) => {
         this.pos_profile = data.pos_profile;
@@ -1459,6 +1502,7 @@ export default {
           this.invoice_doc.posa_notes = null;
           this.invoice_doc.posa_notes = null;
           this.invoice_doc.recipient_phone_number = null;
+          this.invoice_doc.shipping_address_name=null;
         }
       });
     });

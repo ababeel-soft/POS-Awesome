@@ -6,6 +6,7 @@
     <NewAddress></NewAddress>
     <MpesaPayments></MpesaPayments>
     <Variants></Variants>
+     <QTY></QTY>
     <OpeningDialog v-if="dialog" :dialog="dialog"></OpeningDialog>
     <v-row v-show="!dialog">
       <v-col
@@ -72,6 +73,7 @@ import Drafts from './Drafts.vue';
 import ClosingDialog from './ClosingDialog.vue';
 import NewAddress from './NewAddress.vue';
 import Variants from './Variants.vue';
+import QTY from './QTY.vue';
 import Returns from './Returns.vue';
 import MpesaPayments from './Mpesa-Payments.vue';
 
@@ -100,6 +102,7 @@ export default {
     PosCoupons,
     NewAddress,
     Variants,
+    QTY,
     MpesaPayments,
   },
 

@@ -1,13 +1,20 @@
 <template>
   
-  <v-row justify="center">    
+  <v-row justify="center">
+      
     <v-dialog
       v-model="OrderDialog"
       max-width="600px"
-      height="400px"
+      
       @click:outside="clear_order"
     >
       <v-card>
+    
+          <v-container>
+          <v-btn color="error" style="position:absolute" :style="{ top: distance+'px'}" dark @click="close_dialog"  width="5px" height="15px">{{
+            __('X')
+          }}</v-btn>
+           </v-container>
         <v-card-title>
           <span v-if="customer" class="headline primary--text">{{
             __('Order')
@@ -129,6 +136,7 @@
                   color="primary"
                   :label="frappe._('Workstation')"
                   v-model="workstation_search"
+                  v-if ="has_role('Workstation')"
                   :items="workstations"
                   background-color="white"
                   :no-data-text="__('Workstations not found')"
@@ -138,7 +146,18 @@
                 >
                 </v-autocomplete>
               </v-col>
-              
+
+                <v-col cols="6">
+                <v-text-field
+                  dense
+                  readonly
+                  color="#FF0E0E"
+                  :label="frappe._('Order Description') + ' *'"
+                  background-color="white"
+                  hide-details
+                  v-model="order_description"
+                ></v-text-field>
+                 </v-col>
             </v-row>
              <v-row justify="center">
           <v-container>
@@ -182,33 +201,16 @@
               </v-row>
             
             </div>
+
+  
           </v-container>
   </v-row>
- <v-row >
-  <v-col>
-    <v-textarea
-              class="pa-0"
-              outlined
-              dense
-              background-color="white"
-              clearable
-              color="primary"
-              auto-grow
-              rows="2"
-              :label="frappe._('Notes')"
-              v-model="custom_notes"
-              :value="custom_notes"
-            ></v-textarea>
-   </v-col>
-     </v-row>
+ 
           </v-container>
         </v-card-text>
          <Order></Order>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" dark @click="close_dialog">{{
-            __('Close')
-          }}</v-btn>
             <v-btn color="primary"  v-if="start" dark @click="submit_dialog('Processing')">{{
             __('Start')
           }}</v-btn>
@@ -221,6 +223,22 @@
            <v-btn color="primary"  v-if="ready" dark @click="submit_dialog('Ready To Delivery')">{{
             __('Ready')
           }}</v-btn>
+           <v-btn color="primary"  v-if="ready_to_call" dark @click="submit_dialog('Ready To Call')">{{
+            __('Ready To Call')
+          }}</v-btn>
+
+          <v-btn color="primary"  v-if="ready_to_shipping" dark @click="submit_dialog('Ready To Shipping')">{{
+            __('Ready To Shipping')
+          }}</v-btn>
+
+          <v-btn color="primary"  v-if="ready_to_delivery" dark @click="submit_dialog('Ready To Delivery')">{{
+            __('Ready To Delivery')
+          }}</v-btn>  
+
+          <v-btn color="primary"  v-if="no_response" dark @click="submit_dialog('No Response')">{{
+            __('No Response')
+          }}</v-btn>
+          
            <v-btn color="#3F51B5"  v-if="reject" dark @click="submit_dialog('Quality Rejected')">{{
             __('Reject')
           }}</v-btn>
@@ -233,11 +251,35 @@
             <v-btn color="primary"  v-if="inspect" dark @click="submit_dialog('Quality Inspection')">{{
             __('Inspect')
           }}</v-btn>
-           <v-btn color="primary"  v-if="photo" dark @click="submit_dialog('Photo Done')">{{
-            __('Photo')
+           <v-btn color="success"  v-if="photo" dark @click="submit_dialog('Picturing')">{{
+            __('Approve')
+          }}</v-btn>
+
+           <v-btn color="primary"  v-if="workstation()" dark @click="update_workstation">{{
+            __('Assign')
           }}</v-btn>
         </v-card-actions>
+ 
 
+      <v-row >
+      <v-container>
+      <v-col>
+      <v-textarea
+      class="pa-0"
+      outlined
+      dense
+      background-color="white"
+      clearable
+      color="primary"
+      auto-grow
+      rows="2"
+      :label="frappe._('Notes')"
+      v-model="custom_notes"
+      :value="custom_notes"
+      ></v-textarea>
+      </v-col>
+      </v-container>
+      </v-row>
       <v-container v-if="has_notes">
       <p style="color:red"><strong>{{ __("Notes") }}</strong></p>
       <v-data-table
@@ -284,6 +326,10 @@ export default {
     complate:false,
     restart:false,
     ready:false,
+    ready_to_call:false,
+    ready_to_shipping:false,
+    ready_to_delivery:false,
+    no_response:false,
     reject:false,
     delivery:false,
     delivery_service:false,
@@ -293,6 +339,7 @@ export default {
     delivery_date : '',
     custom_delivery_time:'',
     order_name: '',
+    order_description: '',
     filterdItems: [],
     notes_headers: [ 
 
@@ -340,14 +387,34 @@ export default {
     vm.delivery =false,
     vm.delivery_service =false,
     vm.quality_inspection =false,
-    vm.inspect =false
-    vm.photo=false
+    vm.inspect =false,
+    vm.photo=false,
+    vm.ready_to_call=false,
+    vm.ready_to_shipping=false,
+    vm.ready_to_delivery=false,
+    vm.no_response=false
+  },
+  has_role(role){
+  var has = frappe.user.has_role(role);
+  if (has !=true){
+    return false
+  }
+  return has;
+  },
+
+  workstation(){
+  var has = frappe.user.has_role("Workstation");
+
+  if (has && this.workflow_state=="Pending"){
+    return true
+  }
+  return false;
   },
    show_buttons(vm){
     this.disable_buttons(vm);
       switch(vm.workflow_state) {
       case "Pending":
-       vm.start=true;
+        vm.start=(true && this.has_role("Start"));
       break;
       case "Processing":
       vm.complate=true;
@@ -366,7 +433,6 @@ export default {
       vm.complate=true;
       break;
        case "Ready To Delivery":
-      vm.delivery_service=true;
       vm.delivery=true;
       break;
       case "On Delivery":
@@ -375,7 +441,22 @@ export default {
       case "Photo Done":
       vm.ready=true;
       break;
-      default:
+      case "Picturing":
+      vm.ready_to_call=true;
+      break;
+      case "Ready To Call":
+      vm.ready_to_shipping=true;
+      vm.ready_to_delivery=true;
+      vm.no_response=true;
+      break;
+      case "Ready To Shipping":
+      vm.delivery_service=true;
+      break;
+      case "No Response":
+      vm.ready_to_delivery=true;
+      vm.ready_to_shipping=true;
+      break;
+      default:        
       }
   },
     getWorkflowState() {
@@ -403,6 +484,36 @@ export default {
             console.log(r.message);
             this.workstations = r.message;
           }
+        });
+    },
+      update_workstation() {
+        if (! this.workstation_search){
+        evntBus.$emit("show_mesage", {
+        text: __(`Please Select Workstation`),
+        color: "error",
+        });
+        return;
+        }
+
+        const args = {
+          workstation : this.workstation_search,
+          custom_notes:this.custom_notes,
+          order_name :this.order_name
+        };
+        frappe.call({
+        method: "posawesome.posawesome.api.posapp.update_workstation",
+        args: args,
+        callback: (r) => {
+        let text = __('Assign Workstation Successfully.');
+        evntBus.$emit('show_mesage', {
+        text: text,
+        color: 'success',
+        });
+        evntBus.$emit("show_list");
+        this.show_buttons(this);
+        this.custom_notes='';
+        this.get_order_notes(this.order_name);
+        },
         });
     },
      show_image(item,show) {
@@ -480,6 +591,8 @@ export default {
  
   },
   created: function () {
+
+    this.get_workstations();
     evntBus.$on('open_update_order', (data) => {
   
       this.OrderDialog = true;
@@ -495,8 +608,10 @@ export default {
         this.custom_notes="";
         this.get_order_items(data.name);
         this.get_order_notes(data.name);
+        this.order_description = data.custom_order_description
       }
       this.show_buttons(this);
+      this.get_workstations();
 
     });
     evntBus.$on('register_pos_profile', (data) => {
@@ -506,7 +621,7 @@ export default {
       this.pos_profile = data.pos_profile;
     });
     this.getWorkflowState();
-    this.get_workstations();
+   
    
   
    
