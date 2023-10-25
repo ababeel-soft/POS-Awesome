@@ -209,6 +209,24 @@
           </v-container>
         </v-card-text>
          <Order></Order>
+
+    <v-row v-if="photo" >
+    <v-container>
+    <v-col  cols="6">
+      <input type="checkbox" id="Quality" value="Quality" v-model="checkedNames">
+      <label for="Quality">{{__("Quality")}}</label>
+    </v-col>
+    <v-col  cols="12">
+      <input type="checkbox" id="Pattren" value="Pattren" v-model="checkedNames">
+      <label for="Pattren">{{__("Pattren")}}</label>
+    </v-col>
+     <v-col  cols="6">
+      <input type="checkbox" id="Colors" value="Colors" v-model="checkedNames">
+      <label for="Colors">{{__("Colors")}}</label>
+    </v-col>
+    </v-container>
+    </v-row>
+
         <v-card-actions>
           <v-spacer></v-spacer>
             <v-btn color="primary"  v-if="start" dark @click="submit_dialog('Processing')">{{
@@ -261,6 +279,8 @@
         </v-card-actions>
  
 
+      
+
       <v-row >
       <v-container>
       <v-col>
@@ -280,6 +300,9 @@
       </v-col>
       </v-container>
       </v-row>
+
+      
+
       <v-container v-if="has_notes">
       <p style="color:red"><strong>{{ __("Notes") }}</strong></p>
       <v-data-table
@@ -341,6 +364,7 @@ export default {
     order_name: '',
     order_description: '',
     filterdItems: [],
+    checkedNames:[],
     notes_headers: [ 
 
        
@@ -520,9 +544,17 @@ export default {
      evntBus.$emit("open_image_dialog",item,show);
      },
 
+    push_item(item){
+    this.custom_notes+="- "+(frappe._(item));
+     },
     submit_dialog(new_state) {
         const vm = this;
         this.workflow_state=new_state;
+        if (new_state =="Quality Rejected"){
+        this.custom_notes+="يرجى التأكد من : "+"\n";
+        this.checkedNames.forEach(this.push_item);
+        }
+        
         const args = {
           customer : this.customer,
           contact_mobile : this.contact_mobile,
