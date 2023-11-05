@@ -13,6 +13,7 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
     fields=[
                 "name",
                 "customer",
+                "recipient_person",
                 "customer_name",
                 "grand_total",
                 "currency",
@@ -22,7 +23,11 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
                 "custom_delivery_time",
                 "custom_notes",
                 "workstation",
-                "custom_order_description"
+                "custom_order_description",
+                "contact_mobile",
+                "recipient_phone_number",
+                "shipping_address"
+
             ]
 
     
@@ -110,5 +115,13 @@ def get_order_notes (order):
     return frappe.get_all("Sales Order State Item",fields="*",filters={"parent":order ,"note":['!=',""]})
 
 
-
+@frappe.whitelist()
+def get_orders_counts(pos_profile=None):
     
+    if (pos_profile):
+        values = {'pos_profile': pos_profile}
+        result = frappe.db.sql("select workflow_state, count(name) as count from `tabSales Order` WHERE docstatus =1 and pos_profile =%(pos_profile)s group by (workflow_state);",values=values, as_dict=1)
+    else:
+        result = frappe.db.sql("select workflow_state, count(name) as count from `tabSales Order` WHERE docstatus =1 group by workflow_state ;" ,as_dict=1)
+    
+    return result

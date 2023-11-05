@@ -3,6 +3,7 @@ frappe.ui.form.on('Sales Order', {
         show_image(frm);
 	},
 	refresh(frm){
+
         hide_custom_buttons(frm);
         show_image(frm);
        

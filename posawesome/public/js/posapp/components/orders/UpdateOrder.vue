@@ -11,7 +11,7 @@
       <v-card>
     
           <v-container>
-          <v-btn color="error" style="position:absolute" :style="{ top: distance+'px'}" dark @click="close_dialog"  width="5px" height="15px">{{
+          <v-btn color="error" style="position:absolute" :style="{ top: '5px'}" dark @click="close_dialog"  width="5px" height="15px">{{
             __('X')
           }}</v-btn>
            </v-container>
@@ -46,6 +46,45 @@
                   v-model="order_name"
                 ></v-text-field>
               </v-col>
+
+               <v-col cols="6"  v-if="order_doc.contact_mobile">
+                <v-text-field
+                  dense
+                  readonly
+                  color="#FF0E0E"
+                  :label="frappe._('Phone Number')"
+                  background-color="white"
+                  hide-details
+                  v-model="order_doc.contact_mobile"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="6" v-if="order_doc.recipient_person">
+                <v-text-field
+                  dense
+                  readonly
+                  color="#FF0E0E"
+                  :label="frappe._('Receptor')"
+                  background-color="white"
+                  hide-details
+                  v-model="order_doc.recipient_person"
+                ></v-text-field>
+              </v-col>
+
+               <v-col cols="6"  v-if="order_doc.recipient_phone_number">
+                <v-text-field
+                  dense
+                  readonly
+                  color="#FF0E0E"
+                  :label="frappe._('Receptor Phone Number')"
+                  background-color="white"
+                  hide-details
+                  v-model="order_doc.recipient_phone_number"
+                ></v-text-field>
+              </v-col>
+
+
+
               <v-col cols="6">
                 <v-menu
                   ref="delivery_date_menu"
@@ -77,8 +116,6 @@
                   </v-date-picker>
                 </v-menu>
               </v-col>
-
-            
 
                <v-col cols="6">
                 <v-menu
@@ -152,7 +189,7 @@
                   dense
                   readonly
                   color="#FF0E0E"
-                  :label="frappe._('Order Description') + ' *'"
+                  :label="frappe._('Order Description')"
                   background-color="white"
                   hide-details
                   v-model="order_description"
@@ -209,24 +246,40 @@
           </v-container>
         </v-card-text>
          <Order></Order>
-
-    <v-row v-if="photo" >
-    <v-container>
-    <v-col  cols="6">
-      <input type="checkbox" id="Quality" value="Quality" v-model="checkedNames">
-      <label for="Quality">{{__("Quality")}}</label>
+<v-container>
+    <v-row v-if="photo" flex >
+    
+    <v-col cols="6">
+      <input type="checkbox" id="RoseQuality" value="Rose Quality" v-model="checkedNames">
+      <label for="RoseQuality">{{__("Rose Quality")}}</label>
     </v-col>
-    <v-col  cols="12">
-      <input type="checkbox" id="Pattren" value="Pattren" v-model="checkedNames">
-      <label for="Pattren">{{__("Pattren")}}</label>
+    <v-col cols="6">
+      <input type="checkbox" id="NastroHook" value="Nastro Hook" v-model="checkedNames">
+      <label for="NastroHook">{{__("Nastro Hook")}}</label>
     </v-col>
      <v-col  cols="6">
-      <input type="checkbox" id="Colors" value="Colors" v-model="checkedNames">
-      <label for="Colors">{{__("Colors")}}</label>
+      <input type="checkbox" id="CoordinatingColors" value="Coordinating Colors" v-model="checkedNames">
+      <label for="CoordinatingColors">{{__("Coordinating Colors")}}</label>
     </v-col>
-    </v-container>
-    </v-row>
 
+     <v-col  cols="6">
+      <input type="checkbox" id="PuttingGypsophiliaInPlace" value="Putting Gypsophilia In Place" v-model="checkedNames">
+      <label for="Putting GypsophiliaInPlace">{{__("Putting Gypsophilia In Place")}}</label>
+    </v-col>
+
+     <v-col  cols="6">
+      <input type="checkbox" id="PutRosesInGift" value="Put Roses In Gift" v-model="checkedNames">
+      <label for="PutRosesInGift">{{__("Put Roses In Gift")}}</label>
+    </v-col>
+
+     <v-col  cols="6">
+      <input type="checkbox" id="GiftGivingInGeneral" value="Gift Giving In General" v-model="checkedNames">
+      <label for="GiftGivingInGeneral">{{__("Gift Giving In General")}}</label>
+    </v-col>
+   
+
+    </v-row>
+ </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
             <v-btn color="primary"  v-if="start" dark @click="submit_dialog('Processing')">{{
@@ -238,11 +291,8 @@
            <v-btn color="success"  v-if="complate" dark @click="submit_dialog('Completed')">{{
             __('Complate')
           }}</v-btn>
-           <v-btn color="primary"  v-if="ready" dark @click="submit_dialog('Ready To Delivery')">{{
+           <v-btn color="primary"  v-if="ready" dark @click="submit_dialog('Ready')">{{
             __('Ready')
-          }}</v-btn>
-           <v-btn color="primary"  v-if="ready_to_call" dark @click="submit_dialog('Ready To Call')">{{
-            __('Ready To Call')
           }}</v-btn>
 
           <v-btn color="primary"  v-if="ready_to_shipping" dark @click="submit_dialog('Ready To Shipping')">{{
@@ -256,6 +306,11 @@
           <v-btn color="primary"  v-if="no_response" dark @click="submit_dialog('No Response')">{{
             __('No Response')
           }}</v-btn>
+
+          <v-btn color="primary"  v-if="send_sms" dark @click="sms_dialog()">{{
+          __('Send SMS')
+          }}</v-btn>
+
           
            <v-btn color="#3F51B5"  v-if="reject" dark @click="submit_dialog('Quality Rejected')">{{
             __('Reject')
@@ -278,9 +333,6 @@
           }}</v-btn>
         </v-card-actions>
  
-
-      
-
       <v-row >
       <v-container>
       <v-col>
@@ -301,8 +353,6 @@
       </v-container>
       </v-row>
 
-      
-
       <v-container v-if="has_notes">
       <p style="color:red"><strong>{{ __("Notes") }}</strong></p>
       <v-data-table
@@ -315,27 +365,49 @@
 
       <template v-slot:item="{ item }">
       <tr >
-      <td>{{item.to_state}}</td>
+      <td>{{__(item.to_state)}}</td>
       <td>{{item.note}}</td>
       </tr>
 
       </template>
 
       </v-data-table>
+    
       </v-container>
-
       </v-card>
     </v-dialog>
+<SMSDialog></SMSDialog>
+    
   </v-row>
   
 </template>
 
 <script>
 import { evntBus } from '../../bus';
+import SMSDialog from "../orders/SMSDialog.vue";
 export default {
   data: () => ({
+    series: [12,15],
+    chartOptions: {
+    labels: ['Apple', 'Mango'],
+    chart: {
+    type: 'donut',
+    },
+    responsive: [{
+    breakpoint: 200,
+    options: {
+    chart: {
+    width: 85
+    },
+    legend: {
+    position: 'center'
+    }
+    }
+    }]
+    },
     OrderDialog: false,
     delivery_date_menu:[],
+    delivery_time_menu:[],
     customer: '',
     contact_mobile: '',
     workflow_state: '',
@@ -343,16 +415,17 @@ export default {
     workstations: [],
     workstation_search:"",
     custom_notes:'',
+    order_doc:'',
     order_notes:[],
     has_notes:false,
     start:false,
     complate:false,
     restart:false,
     ready:false,
-    ready_to_call:false,
-    ready_to_shipping:false,
     ready_to_delivery:false,
+    ready_to_shipping:false,
     no_response:false,
+    send_sms:false,
     reject:false,
     delivery:false,
     delivery_service:false,
@@ -366,8 +439,6 @@ export default {
     filterdItems: [],
     checkedNames:[],
     notes_headers: [ 
-
-       
         {
           text: __("State"),
           align: "start",
@@ -383,6 +454,9 @@ export default {
       ]
   }),
   watch: {},
+  components: {
+   SMSDialog
+  },
   methods: {
    
     close_dialog() {
@@ -407,16 +481,16 @@ export default {
     vm.complate =false,
     vm.restart =false,
     vm.ready =false,
+    vm.ready_to_delivery=false,
     vm.reject =false,
     vm.delivery =false,
     vm.delivery_service =false,
     vm.quality_inspection =false,
     vm.inspect =false,
     vm.photo=false,
-    vm.ready_to_call=false,
     vm.ready_to_shipping=false,
-    vm.ready_to_delivery=false,
-    vm.no_response=false
+    vm.no_response=false,
+    vm.send_sms=false
   },
   has_role(role){
   var has = frappe.user.has_role(role);
@@ -458,6 +532,7 @@ export default {
       break;
        case "Ready To Delivery":
       vm.delivery=true;
+      vm.ready_to_shipping=true;
       break;
       case "On Delivery":
       vm.delivery=true;
@@ -466,7 +541,7 @@ export default {
       vm.ready=true;
       break;
       case "Picturing":
-      vm.ready_to_call=true;
+      vm.ready=true;
       break;
       case "Ready To Call":
       vm.ready_to_shipping=true;
@@ -479,25 +554,39 @@ export default {
       case "No Response":
       vm.ready_to_delivery=true;
       vm.ready_to_shipping=true;
+      vm.send_sms=true;
       break;
-      default:        
+      case "Message Sent Done":
+      vm.ready_to_delivery=true;
+      vm.ready_to_shipping=true;
+      break;      
+      default:    
       }
   },
     getWorkflowState() {
       if (this.workflowstatus.length > 0) return;
-      const vm = this;
-      frappe.db
-        .get_list('Workflow State', {
-          fields: ['name'],
-          limit: 1000,
-          order_by: 'name',
-        })
-        .then((data) => {
-          if (data.length > 0) {
-            data.forEach((el) => {
-              vm.workflowstatus.push(el.name);
-            });
-          }
+        this.get_workflow_status()
+    },
+
+     get_workflow_status() {
+     
+      frappe.call("posawesome.posawesome.api.posapp.get_workflow_status")
+        .then((r) => {
+          if (r.message) {
+          this.workflowstatus =r.message;                 
+        }
+        });
+    },
+
+  
+     get_workflow_status() {
+     
+      frappe.call("posawesome.posawesome.api.posapp.get_workflow_status")
+        .then((r) => {
+          if (r.message) {
+          console.log(r.message);
+          this.workflowstatus =r.message;                 
+        }
         });
     },
       get_workstations() {
@@ -505,7 +594,6 @@ export default {
       frappe.call("posawesome.posawesome.api.posapp.get_workstations")
         .then((r) => {
           if (r.message) {
-            console.log(r.message);
             this.workstations = r.message;
           }
         });
@@ -549,6 +637,15 @@ export default {
      },
     submit_dialog(new_state) {
         const vm = this;
+        if(new_state=='Ready') {
+          if(this.order_doc.shipping_address){
+            new_state="Ready To Shipping"
+          }else if(this.order_doc.recipient_person){
+            new_state="Ready To Call"
+          }else{
+            new_state="Ready To Delivery"
+          }
+        }
         this.workflow_state=new_state;
         if (new_state =="Quality Rejected"){
         this.custom_notes+="يرجى التأكد من : "+"\n";
@@ -571,7 +668,6 @@ export default {
           callback: (r) => {
 
               let text = __('Order updated successfully.');
-     
               evntBus.$emit('show_mesage', {
                 text: text,
                 color: 'success',
@@ -582,11 +678,15 @@ export default {
               this.show_buttons(this);
               this.custom_notes='';
               this.get_order_notes(this.order_name);
+              evntBus.$emit("update_pages");
           
           },
         });
         //this.OrderDialog = false;
       
+    },
+    sms_dialog() {
+      evntBus.$emit("open_sms_dialog",this);
     },
     get_order_items(order) {
     return frappe
@@ -595,8 +695,6 @@ export default {
       })
       .then((r) => {
         if (r.message) {
-
-         console.log(r.message)
          this.filterdItems=r.message;
         }
       });
@@ -608,11 +706,8 @@ export default {
       })
       .then((r) => {
         if (r.message) {
-
-         console.log(r.message)
          this.order_notes=r.message;
          if (this.order_notes.length > 0){
-          console.log(this.order_notes.length);
           this.has_notes=true;
          }else{
            this.has_notes=false;
@@ -626,9 +721,7 @@ export default {
 
     this.get_workstations();
     evntBus.$on('open_update_order', (data) => {
-  
       this.OrderDialog = true;
-      
       if (data) {
         this.customer= data.customer_name
         this.order_name = data.name;
@@ -641,6 +734,7 @@ export default {
         this.get_order_items(data.name);
         this.get_order_notes(data.name);
         this.order_description = data.custom_order_description
+        this.order_doc=data;
       }
       this.show_buttons(this);
       this.get_workstations();
@@ -651,6 +745,9 @@ export default {
     });
     evntBus.$on('payments_register_pos_profile', (data) => {
       this.pos_profile = data.pos_profile;
+    });
+    evntBus.$on('change_order_state', (new_state) => {
+    this.submit_dialog(new_state);
     });
     this.getWorkflowState();
    

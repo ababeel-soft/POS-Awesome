@@ -361,7 +361,7 @@ def get_items_groups():
         select * 
         from `tabItem Group`
         where is_group = 0
-        order by name
+        order by custom_item_group_index
         LIMIT 0, 200 """,
         as_dict=1,
     )
@@ -1325,6 +1325,24 @@ def make_address(args):
 
     return address
 
+@frappe.whitelist() 
+def make_delivery_charge(args):
+    args = json.loads(args)
+    pos_profile = frappe.get_doc("POS Profile", args.get("pos_profile"))
+    delivery_charge = frappe.get_doc(
+        {
+            "doctype": "Delivery Charges",
+            "label": args.get("delivery_charge"),
+            "company": pos_profile.company,
+            "default_rate": int(args.get("delivery_charge_rate")) ,
+            "shipping_account": pos_profile.custom_shipping_income_account,
+            "cost_center": pos_profile.cost_center
+        }
+    ).insert()
+
+    return delivery_charge
+
+
 
 def build_item_cache(item_code):
     parent_item_code = item_code
@@ -1771,7 +1789,12 @@ def get_product_bundle_items(item):
 
 @frappe.whitelist()
 def get_workflow_status():
-    return frappe.get_all("Workflow State",fields="name",pluck="name")
+    li = frappe.get_all("Workflow State",fields="name")
+    new_li=[]
+    for item in li:
+        new_li.append({"text":_(item.name) ,"value":item.name})
+    print(new_li)
+    return new_li
 
 @frappe.whitelist()
 def get_workstations():

@@ -4,6 +4,7 @@
     <Drafts></Drafts>
     <Returns></Returns>
     <NewAddress></NewAddress>
+    <NewDeliveryCharge></NewDeliveryCharge>
     <MpesaPayments></MpesaPayments>
     <Variants></Variants>
      <QTY></QTY>
@@ -72,6 +73,7 @@ import PosCoupons from './PosCoupons.vue';
 import Drafts from './Drafts.vue';
 import ClosingDialog from './ClosingDialog.vue';
 import NewAddress from './NewAddress.vue';
+import NewDeliveryCharge from './NewDeliveryCharge.vue';
 import Variants from './Variants.vue';
 import QTY from './QTY.vue';
 import Returns from './Returns.vue';
@@ -101,6 +103,7 @@ export default {
     PosOffers,
     PosCoupons,
     NewAddress,
+    NewDeliveryCharge,
     Variants,
     QTY,
     MpesaPayments,

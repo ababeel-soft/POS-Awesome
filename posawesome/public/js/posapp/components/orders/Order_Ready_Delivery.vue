@@ -35,19 +35,6 @@
                   @change="get_sales_orders"
                 ></v-autocomplete>
               </v-col>
-               <v-col md="3" cols="8" class="ma-2"> 
-                <v-select
-                  dense
-                  outlined
-                  hide-details
-                  clearable
-                  background-color="white"
-                  v-model="order_status_search"
-                  :items="order_status_list"
-                  :label="frappe._('Status')"
-                  @change="get_sales_orders"
-                ></v-select>
-              </v-col>
                <v-col md="2" cols="8" class="ma-2"> 
                 <v-select
                   dense
@@ -325,7 +312,7 @@ export default {
             company: this.company,
             currency: this.pos_profile.currency,
             sales_order_search: this.sales_order_search,
-            order_status_search:this.order_status_search,
+            order_status_search:'Ready To delivery',
             workstation_search:this.workstation_search
           }
         )
@@ -341,9 +328,8 @@ export default {
       frappe.call("posawesome.posawesome.api.posapp.get_workflow_status")
         .then((r) => {
           if (r.message) {
-          console.log(r.message);
-          this.order_status_list =r.message;                 
-        }
+            this.order_status_list = r.message;
+          }
         });
     },
      get_workstations() {

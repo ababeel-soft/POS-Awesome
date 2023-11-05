@@ -12,6 +12,9 @@ import Navbar from './components/Navbar.vue';
 import POS from './components/pos/Pos.vue';
 import Payments from './components/payments/Pay.vue';
 import Orders from './components/orders/Order.vue';
+import Order_Ready_Call from './components/orders/Order_Ready_Call.vue';
+import Order_Ready_Delivery from './components/orders/Order_Ready_Delivery.vue';
+import OrderDashBoard from './components/orders/OrderDashBoard.vue';
 
 export default {
   data: function () {
@@ -23,11 +26,21 @@ export default {
     Navbar,
     POS,
     Payments,
-    Orders
+    Orders,
+    Order_Ready_Call,
+    Order_Ready_Delivery,
+    OrderDashBoard
   },
   methods: {
     setPage(page) {
+      if (page =="ReadyToCall"){
+        page ='Order_Ready_Call'
+      }
+       if (page =="ReadyToDelivery"){
+        page ='Order_Ready_Delivery'
+      }
       this.page = page;
+      
     },
     remove_frappe_nav() {
       this.$nextTick(function () {
@@ -51,5 +64,11 @@ export default {
 <style scoped>
 .container1 {
   margin-top: 0px;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+.font_card{
+  font-size: 1rem;
+  font-family: "Ubuntu";
+}
 }
 </style>

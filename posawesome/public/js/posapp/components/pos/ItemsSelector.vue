@@ -72,17 +72,26 @@
                       item.image ||
                       '/assets/posawesome/js/posapp/components/pos/placeholder-image.png'
                     "
-                    @click.right=" show_image(item,true)"
                     class="white--text align-end"
                     gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4)"
                     height="100px"
+                    v-if = "item.item_group != pos_profile.custom_pr_hidden_item_group_"
                   >
-                    <v-card-text
-                      v-text="item.item_name"
-                      class="text-caption px-1 pb-0"
-                    ></v-card-text>
+                  <v-card-text
+                  v-text="item.item_name" 
+                  class=" px-1 pb-0  font_card"
+                  ></v-card-text>
                   </v-img>
-                  <v-card-text class="text--primary pa-1">
+
+                    <v-card-text
+                    height="100px"
+                    v-text="item.item_name" 
+                    style="text-align:center"
+                    v-if = "item.item_group == pos_profile.custom_pr_hidden_item_group_"
+                    ></v-card-text>
+
+
+                  <v-card-text class="text--primary pa-1" v-if = "item.item_group != pos_profile.custom_pr_hidden_item_group_">
                     <div class="text-caption primary--text">
                       {{ currencySymbol(item.currency) || '' }}
                       {{ formtCurrency(item.rate) || 0 }}
@@ -134,12 +143,12 @@
 </p>
   <v-card
   class="selection mx-auto grey lighten-5 mt-3"
-  style="max-height: 18vh; height:18vh"
+  style="max-height:15vh; height:10vh"
   >
    
    <v-col cols="12" class="pt-0 mt-0">
 <div fluid class="items" >
-            <v-row dense class="overflow-y-auto" style="max-height: 18vh">
+            <v-row dense class="overflow-y-auto" style="height: 8vh">
               <v-col
                 v-for="(doc_group, idx) in items_group"
                 :key="idx"
@@ -149,23 +158,9 @@
                 sm="4"
                 cols="6"
               >
-                <v-card hover="hover" @click="search_by_item_group(doc_group)" style="max-height: 7vh ; max-width: 15vh" >
-                  <v-img
-                    :src="
-                      doc_group.image ||
-                      '/assets/posawesome/js/posapp/components/pos/placeholder-image.png'
-                    "
-                    class="white--text align-end"
-                    gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4)"
-                    height="7vh"
-                  >
-                    <v-card-text
-                      v-text="doc_group.item_group_name"
-                      class="text-caption px-1 pb-0"
-                    ></v-card-text>
-                  </v-img>
-                  </v-card-text>
-                </v-card>
+                <v-btn color="error" dark @click="search_by_item_group(doc_group)"  width="15vh" height="7vh">
+                <B>{{ __(doc_group.item_group_name) }} </B>
+                </v-btn>
               </v-col>
             </v-row>
           </div>
@@ -330,7 +325,6 @@ export default {
           callback: function (r) {
             if (r.message) {
               r.message.forEach((element) => {
-                  console.log(element);
                   vm.items_group.push(element);
                 
                 
@@ -638,6 +632,11 @@ export default {
         return this.first_search;
       },
       set: _.debounce(function (newValue) {
+        if (this.item_group != ''){
+          this.item_group='';
+          this.get_items();
+          
+        }
         this.first_search = newValue;
       }, 200),
     },

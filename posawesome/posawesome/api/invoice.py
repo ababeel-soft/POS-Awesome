@@ -5,6 +5,8 @@
 
 from __future__ import unicode_literals
 import frappe
+from datetime import date
+from datetime import datetime
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import flt, add_days
@@ -63,7 +65,6 @@ def create_sales_order(doc):
         doc.posa_pos_opening_shift
         and doc.pos_profile
         and doc.is_pos
-        and doc.posa_delivery_date
         and not doc.update_stock
         and frappe.get_value("POS Profile", doc.pos_profile, "posa_allow_sales_order")
     ):
@@ -72,15 +73,28 @@ def create_sales_order(doc):
             sales_order_doc.posa_notes = doc.posa_notes
             sales_order_doc.flags.ignore_permissions = True
             sales_order_doc.flags.ignore_account_permission = True
-            sales_order_doc.delivery_date=doc.posa_delivery_date
-            if doc.posa_delivery_time:
-                sales_order_doc.custom_delivery_time=doc.posa_delivery_time
+
+            if hasattr(doc, "posa_delivery_date"):
+                if doc.posa_delivery_date:
+                    sales_order_doc.delivery_date=doc.posa_delivery_date
+                else:
+                    sales_order_doc.delivery_date=today = date.today()
+            if hasattr(doc, "posa_delivery_time"):
+                if doc.posa_delivery_time:
+                    sales_order_doc.custom_delivery_time=doc.posa_delivery_time
             if hasattr(doc, "recipient_person"):
                 sales_order_doc.recipient_person=doc.recipient_person
             if hasattr(doc, "recipient_phone_number"):
                 sales_order_doc.recipient_phone_number=doc.recipient_phone_number
             if hasattr(doc, "bundle_details"):
                 sales_order_doc.bundle_details=doc.bundle_details
+            if hasattr(doc, "discount_reason"):
+                sales_order_doc.custom_discount_reason=doc.discount_reason
+            if hasattr(doc, "posa_delivery_charges"):
+                sales_order_doc.shipping_address=doc.posa_delivery_charges
+
+                
+
             sales_order_doc.save()
             sales_order_doc.submit()
             url = frappe.utils.get_url_to_form(

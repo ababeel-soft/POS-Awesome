@@ -88,10 +88,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-07-25 15:38:25.771590",
+ "modified": "2023-11-01 12:54:34.429265",
  "modified_by": "Administrator",
  "module": "POSAwesome",
  "name": "Delivery Charges",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -108,5 +109,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }

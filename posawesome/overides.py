@@ -29,7 +29,12 @@ class CustomSalesOrder(SalesOrder):
         self.change_state()
 
     def validate(self):
+        if self.custom_delivery_time:
+            if len(self.custom_delivery_time)>10:
+                self.custom_delivery_time=None
+        
         self.change_state()
+        
         
     def add_row_note(self, state,notes):
         row = self.append('sales_order_statuses', {})

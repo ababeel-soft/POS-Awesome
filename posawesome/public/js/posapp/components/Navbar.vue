@@ -5,13 +5,21 @@
         @click.stop="drawer = !drawer"
         class="grey--text"
       ></v-app-bar-nav-icon>
+
+       <v-img
+        src="/assets/posawesome/js/posapp/components/pos/maska-logo.png"
+        alt="MASKA"
+        max-width="32"
+        class="mr-2"
+        color="primary"
+      ></v-img>
       
       <v-toolbar-title
         @click="go_desk"
         style="cursor: pointer"
         class="text-uppercase primary--text"
       >
-        <span class="font-weight-light">ABABEEL POS</span>
+        <span class="font-weight-light">M A S K A</span>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -102,19 +110,58 @@
         </v-list-item>
         <!-- <MyPopup/> -->
         <v-list-item-group v-model="item" color="white" >
-          <v-list-item
-            v-for="item in items"
-            :key="item.text"
-            @click="changePage(item.text)"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
+        
+        
+        <v-list-item 
+        @click="changePage('POS')">
+        <v-list-item-content>
+        {{__("POS")}}
+        </v-list-item-content>
+        </v-list-item>
 
-              <v-list-item-title >{{ __(item.text)}}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+
+        <v-list-item @click="changePage('Payments')" >
+        <v-list-item-content>
+        {{__("Payments")}}
+        </v-list-item-content>
+        </v-list-item>
+
+
+        <v-list-item @click="changePage('Orders')" >
+        <v-list-item-content>
+        {{__("Orders")}}
+        </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item v-if="ready_to_call_count" @click="changePage('ReadyToCall')" >
+        <v-list-item-icon >
+        <v-avatar  color="error"  size="25" > {{ready_to_call_count}}</v-avatar>
+        </v-list-item-icon>
+        <v-list-item-content>
+        {{__("Call")}}
+        </v-list-item-content>
+        </v-list-item>
+
+
+        <v-list-item v-if="ready_to_delivery_count" @click="changePage('ReadyToDelivery')" >
+        <v-list-item-icon >
+        <v-avatar  color="error"  size="25" > {{ready_to_delivery_count}}</v-avatar>
+        </v-list-item-icon>
+        <v-list-item-content>
+        {{__("Delivery")}}
+        </v-list-item-content>
+        </v-list-item>
+
+
+         <v-list-item  @click="changePage('OrderDashBoard')" >
+
+        <v-list-item-content>
+        {{__("Order DashBoard")}}
+        </v-list-item-content>
+        </v-list-item>
+
+       
+          
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -142,7 +189,7 @@ export default {
       drawer: false,
       mini: true,
       item: 0,
-      items: [{ text: 'POS', icon: 'mdi-network-pos' }],
+      items: [],
       page: '',
       fav: true,
       menu: false,
@@ -159,11 +206,26 @@ export default {
       freezeTitle: '',
       freezeMsg: '',
       last_invoice: '',
+      orders_counts:[],
+      ready_to_call_count:0,
+      ready_to_delivery_count:0,
     };
   },
   methods: {
     changePage(key) {
       this.$emit('changePage', key);
+    },
+    set_by_label(item){
+
+      
+      if (item.workflow_state =="Ready To Call"){
+
+        this.ready_to_call_count= item.count;
+      }
+      if(item.workflow_state =="Ready To Delivery"){
+        this.ready_to_delivery_count= item.count;
+      }
+
     },
     go_desk() {
       frappe.set_route('/');
@@ -234,22 +296,14 @@ export default {
           ? data.company_logo
           : this.company_img;
       });
-      evntBus.$on('register_pos_profile', (data) => {
-        this.pos_profile = data.pos_profile;
-        const payments = { text: 'Payments', icon: 'mdi-cash-register' };
-        if (
-          this.pos_profile.posa_use_pos_awesome_payments &&
-          this.items.length !== 2
-        ) {
-          this.items.push(payments);
-        }
-      });
 
-      evntBus.$on('register_pos_profile', (data) => {
-        this.pos_profile = data.pos_profile;
-        const orders = { text: 'Orders', icon: 'mdi-cash-register' };
-         this.items.push(orders);
+       evntBus.$on('set_counts', (data) => {
+        this.ready_to_call_count=0;
+      this.ready_to_delivery_count=0;
+        data.forEach(this.set_by_label);
       });
+      
+  
       evntBus.$on('set_last_invoice', (data) => {
         this.last_invoice = data;
       });
@@ -263,6 +317,28 @@ export default {
         this.freezTitle = '';
         this.freezeMsg = '';
       });
+
+       evntBus.$on('update_pages', () => {
+        const vm =this;
+        pos_profile = vm.pos_profile.name;
+
+        frappe.call({
+        method: "posawesome.posawesome.api.sales_order.get_orders_counts",
+        args: { pos_profile  },
+        callback: function (r) {
+        if (r.message) {
+        evntBus.$emit('set_counts', (r.message));
+        }
+        },
+        });
+      });
+
+        evntBus.$on('register_pos_profile', (data) => {
+        this.pos_profile = data.pos_profile;
+        evntBus.$emit("update_pages");
+      });
+
+
     });
   },
 };
