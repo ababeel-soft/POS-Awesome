@@ -47,6 +47,7 @@ export default {
       const vm =this;
       frappe.call({
       method: "posawesome.posawesome.api.sales_order.get_orders_counts",
+      args:{pos_profile:null},
       callback: function (r) {
       if (r.message) {
         console.log(r.message)
