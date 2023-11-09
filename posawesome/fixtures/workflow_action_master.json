@@ -89,5 +89,33 @@
   "modified": "2023-10-13 15:31:40.862318",
   "name": "Photo",
   "workflow_action_name": "Photo"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-24 15:57:38.821398",
+  "name": "Ready To Call",
+  "workflow_action_name": "Ready To Call"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-24 16:00:40.388159",
+  "name": "Ready To Shipping",
+  "workflow_action_name": "Ready To Shipping"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-10-24 16:08:36.885561",
+  "name": "No Response",
+  "workflow_action_name": "No Response"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2023-11-02 18:50:40.073562",
+  "name": "Send Message",
+  "workflow_action_name": "Send Message"
  }
 ]

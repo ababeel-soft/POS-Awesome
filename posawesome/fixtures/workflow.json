@@ -4,7 +4,7 @@
   "doctype": "Workflow",
   "document_type": "Sales Order",
   "is_active": 1,
-  "modified": "2023-10-13 15:32:46.354922",
+  "modified": "2023-11-02 18:52:45.187344",
   "name": "Sales Order Workflow",
   "override_status": 0,
   "send_email_alert": 0,
@@ -148,7 +148,59 @@
     "parent": "Sales Order Workflow",
     "parentfield": "states",
     "parenttype": "Workflow",
-    "state": "Photo Done",
+    "state": "Picturing",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "All",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Sales Order Workflow",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Ready To Call",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "All",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Sales Order Workflow",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Ready To Shipping",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "All",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Sales Order Workflow",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "No Response",
+    "update_field": null,
+    "update_value": null
+   },
+   {
+    "allow_edit": "All",
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Sales Order Workflow",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Message Sent Done",
     "update_field": null,
     "update_value": null
    }
@@ -168,7 +220,7 @@
    {
     "action": "Start",
     "allow_self_approval": 1,
-    "allowed": "All",
+    "allowed": "Start",
     "condition": null,
     "next_state": "Processing",
     "parent": "Sales Order Workflow",
@@ -199,17 +251,6 @@
     "state": "Completed"
    },
    {
-    "action": "Restart",
-    "allow_self_approval": 1,
-    "allowed": "All",
-    "condition": null,
-    "next_state": "Processing",
-    "parent": "Sales Order Workflow",
-    "parentfield": "transitions",
-    "parenttype": "Workflow",
-    "state": "Quality Rejected"
-   },
-   {
     "action": "Reject",
     "allow_self_approval": 1,
     "allowed": "All",
@@ -221,15 +262,48 @@
     "state": "Quality Inspection"
    },
    {
-    "action": "Photo",
+    "action": "Approve",
     "allow_self_approval": 1,
     "allowed": "All",
     "condition": null,
-    "next_state": "Photo Done",
+    "next_state": "Picturing",
     "parent": "Sales Order Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
     "state": "Quality Inspection"
+   },
+   {
+    "action": "Restart",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Processing",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Quality Rejected"
+   },
+   {
+    "action": "Ready To Call",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Call",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Picturing"
+   },
+   {
+    "action": "Ready To Shipping",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Shipping",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Picturing"
    },
    {
     "action": "Ready To Delivery",
@@ -240,18 +314,73 @@
     "parent": "Sales Order Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
-    "state": "Photo Done"
+    "state": "Picturing"
    },
    {
-    "action": "Delivery",
+    "action": "Ready To Shipping",
     "allow_self_approval": 1,
     "allowed": "All",
     "condition": null,
-    "next_state": "Delivery",
+    "next_state": "Ready To Shipping",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Ready To Call"
+   },
+   {
+    "action": "Ready To Delivery",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Delivery",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Ready To Call"
+   },
+   {
+    "action": "No Response",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "No Response",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Ready To Call"
+   },
+   {
+    "action": "Delivery Service",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Shipping",
     "parent": "Sales Order Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
     "state": "Ready To Delivery"
+   },
+   {
+    "action": "Ready To Delivery",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Delivery",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "No Response"
+   },
+   {
+    "action": "Ready To Shipping",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Shipping",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "No Response"
    },
    {
     "action": "Delivery Service",
@@ -259,6 +388,17 @@
     "allowed": "All",
     "condition": null,
     "next_state": "On Delivery",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Ready To Shipping"
+   },
+   {
+    "action": "Delivery",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Delivery",
     "parent": "Sales Order Workflow",
     "parentfield": "transitions",
     "parenttype": "Workflow",
@@ -274,6 +414,39 @@
     "parentfield": "transitions",
     "parenttype": "Workflow",
     "state": "On Delivery"
+   },
+   {
+    "action": "Send Message",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Message Sent Done",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "No Response"
+   },
+   {
+    "action": "Ready To Delivery",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Delivery",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Message Sent Done"
+   },
+   {
+    "action": "Ready To Shipping",
+    "allow_self_approval": 1,
+    "allowed": "All",
+    "condition": null,
+    "next_state": "Ready To Shipping",
+    "parent": "Sales Order Workflow",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Message Sent Done"
    }
   ],
   "workflow_name": "Sales Order Workflow",

@@ -2,11 +2,20 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2023-09-17 20:18:08.397282",
-  "name": "Completed",
-  "style": "",
-  "workflow_state_name": "Completed"
+  "icon": "ok-sign",
+  "modified": "2023-10-12 18:01:24.239083",
+  "name": "Approved",
+  "style": "Success",
+  "workflow_state_name": "Approved"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "remove",
+  "modified": "2023-10-12 18:01:24.241007",
+  "name": "Rejected",
+  "style": "Danger",
+  "workflow_state_name": "Rejected"
  },
  {
   "docstatus": 0,
@@ -56,20 +65,83 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "question-sign",
-  "modified": "2023-09-17 16:27:53.217029",
-  "name": "Pending",
-  "style": "",
-  "workflow_state_name": "Pending"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
   "icon": "",
   "modified": "2023-10-07 14:21:44.357174",
   "name": "Quality Rejected",
   "style": "",
   "workflow_state_name": "Quality Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-13 15:31:07.179722",
+  "name": "Photo Done",
+  "style": "",
+  "workflow_state_name": "Photo Done"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-24 15:55:40.663166",
+  "name": "Picturing",
+  "style": "",
+  "workflow_state_name": "Picturing"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-24 15:56:53.625474",
+  "name": "Ready To Call",
+  "style": "",
+  "workflow_state_name": "Ready To Call"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-24 16:00:15.402411",
+  "name": "Ready To Shipping",
+  "style": "",
+  "workflow_state_name": "Ready To Shipping"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-10-24 16:08:32.301617",
+  "name": "No Response",
+  "style": "",
+  "workflow_state_name": "No Response"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-11-02 18:48:33.898292",
+  "name": "Message Sent Done",
+  "style": "",
+  "workflow_state_name": "Message Sent Done"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2023-09-17 20:18:08.397282",
+  "name": "Completed",
+  "style": "",
+  "workflow_state_name": "Completed"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "question-sign",
+  "modified": "2023-09-17 16:27:53.217029",
+  "name": "Pending",
+  "style": "",
+  "workflow_state_name": "Pending"
  },
  {
   "docstatus": 0,
@@ -88,14 +160,5 @@
   "name": "Processing",
   "style": "",
   "workflow_state_name": "Processing"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2023-10-13 15:31:07.179722",
-  "name": "Photo Done",
-  "style": "",
-  "workflow_state_name": "Photo Done"
  }
 ]
