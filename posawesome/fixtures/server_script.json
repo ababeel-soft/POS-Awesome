@@ -1,0 +1,19 @@
+[
+ {
+  "allow_guest": 0,
+  "api_method": null,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Server Script",
+  "doctype_event": "Before Save",
+  "event_frequency": "All",
+  "modified": "2022-12-23 16:54:15.030273",
+  "name": "Insert Selling Price From Purchase Invoice",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "reference_doctype": "Purchase Invoice",
+  "script": "setting=frappe.get_doc(\"Selling Settings\")\nfor item in doc.items:\n    price=frappe.get_all(\"Item Price\",filters={\"price_list\":setting.selling_price_list,\"item_code\":item.item_code})\n    if item.selling_rate > 0 and not price:\n        new_price=frappe.get_doc({\"doctype\":\"Item Price\",\"item_code\":item.item_code,\"price_list\":setting.selling_price_list,\"price_list_rate\":item.selling_rate})\n        new_price.insert()\n    elif item.selling_rate > 0:\n        old_price=frappe.get_doc(\"Item Price\",price[0].name)\n        old_price.price_list_rate=item.selling_rate\n        old_price.save()\n        ",
+  "script_type": "DocType Event"
+ }
+]
