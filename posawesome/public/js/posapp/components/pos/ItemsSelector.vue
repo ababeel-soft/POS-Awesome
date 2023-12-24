@@ -73,11 +73,12 @@
                       '/assets/posawesome/js/posapp/components/pos/placeholder-image.png'
                     "
                     class="white--text align-end"
-                    gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4)"
+                    gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,1)"
                     height="100px"
                     v-if = "item.item_group != pos_profile.custom_pr_hidden_item_group_"
                   >
                   <v-card-text
+                  style="text-align:end"
                   v-text="item.item_name" 
                   class=" px-1 pb-0  font_card"
                   ></v-card-text>
