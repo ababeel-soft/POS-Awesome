@@ -102,6 +102,9 @@ doc_events = {
         "validate": "posawesome.posawesome.api.customer.validate",
         "after_insert": "posawesome.posawesome.api.customer.after_insert",
     },
+    "Product Bundle": {
+        "validate": "posawesome.posawesome.api.bundle.validate"
+    },
 }
 
 override_doctype_class = {

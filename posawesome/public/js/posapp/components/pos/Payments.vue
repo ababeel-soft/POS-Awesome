@@ -993,12 +993,9 @@ export default {
       data["redeemed_customer_credit"] = this.redeemed_customer_credit;
       data["customer_credit_dict"] = this.customer_credit_dict;
       data["is_cashback"] = this.is_cashback;
+      data["bundle_details"]=this.bundle_details;
       this.invoice_doc.discount_reason=this.discount_reason;
-      
-      if (this.bundle_details ){
-         this.invoice_doc.bundle_details=this.bundle_details.item_code
-         evntBus.$emit("add_bundle",null);
-      }
+
 
       if (this.selcted_delivery_charges) {
         this.invoice_doc.posa_delivery_charges=this.selcted_delivery_charges.name;
@@ -1381,9 +1378,6 @@ export default {
       this.clear_all_amounts();
       this.customer_credit_dict.push(advance);
     },
-      add_bundle(item) {
-      this.bundle_details=item;
-      },
       reset_bundle(){
       this.bundle_details="";
       },
@@ -1517,8 +1511,13 @@ export default {
 
   mounted: function () {
     this.$nextTick(function () {
-      evntBus.$on("send_invoice_doc_payment", (invoice_doc) => {
+      evntBus.$on("send_invoice_doc_payment", (invoice_doc,bundle_data) => {
+
         this.invoice_doc = invoice_doc;
+        if(bundle_data["bundle_details"]){
+        this.bundle_details=bundle_data["bundle_details"];
+        }
+        
         this.invoice_doc.shipping_address_name=null;
         this.discount_reason='';
         if (! this.invoice_doc.posa_delivery_date){
@@ -1589,9 +1588,6 @@ export default {
     });
     evntBus.$on("set_mpesa_payment", (data) => {
       this.set_mpesa_payment(data);
-    });
-    evntBus.$on("add_bundle", (item) => {
-     this.add_bundle(item)
     });
   },
   created() {

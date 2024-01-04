@@ -155,7 +155,7 @@ def get_items(pos_profile, price_list=None, item_group="", search_value=""):
 
         condition = ""
         condition += get_item_group_condition(pos_profile.get("name"))
-
+        condition += get_item_group_condition(pos_profile.get("name"))
         if use_limit_search:
             search_limit = pos_profile.get("posa_search_limit") or 500
             if search_value:
@@ -198,7 +198,9 @@ def get_items(pos_profile, price_list=None, item_group="", search_value=""):
                 has_batch_no,
                 has_serial_no,
                 max_discount,
-                brand
+                brand,
+                custom_has_bundle,
+                custom_product_bundle
             FROM
                 `tabItem`
             WHERE
@@ -540,7 +542,12 @@ def update_invoice(data):
 def submit_invoice(invoice, data):
     data = json.loads(data)
     invoice = json.loads(invoice)
-  
+    bundle_item=None
+    if data:
+        bundle_item=data["bundle_details"]
+   
+   
+
     invoice_doc = frappe.get_doc("Sales Invoice", invoice.get("name"))
     invoice_doc.update(invoice)
     if invoice.get("posa_delivery_date"):
@@ -613,8 +620,9 @@ def submit_invoice(invoice, data):
     frappe.flags.ignore_account_permission = True
     invoice_doc.posa_is_printed = 1
     #invoice_doc.bundle_details=data["bundle_details"]
+    if bundle_item:
+        invoice_doc.custom_bundle_details=bundle_item["item_code"]
     invoice_doc.save()
-    print(invoice_doc)
     if frappe.get_value(
         "POS Profile",
         invoice_doc.pos_profile,
@@ -1781,7 +1789,7 @@ def get_seearch_items_conditions(item_code, serial_no, batch_no, barcode):
 @frappe.whitelist()
 def get_product_bundle_items(item):
     item = json.loads(item)
-    items =frappe.db.get_all('Product Bundle Item', filters={'parent':item["item_code"]},fields="*")
+    items =frappe.db.get_all('Product Bundle Item', filters={'parent':item["custom_product_bundle"]},fields="*")
     if items:
         return items
     else:
@@ -1807,3 +1815,5 @@ def update_workstation(order_name,workstation,custom_notes=None):
     if custom_notes:
         doc.custom_notes=custom_notes
     doc.save()
+
+

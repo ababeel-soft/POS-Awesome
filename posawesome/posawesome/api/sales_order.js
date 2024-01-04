@@ -14,17 +14,18 @@ frappe.ui.form.on('Sales Order', {
 });
 
 function show_image(frm){
+
+        console.log("Stable");
         if (frm.doc.bundle_details){
         let $preview = "";
         frappe.db.get_doc("Item",frm.doc.bundle_details).then((item) => {
-        
+        console.log(item.image);
         $preview = $(`<div align="center">
         <img
         class="img-responsive"
         src=${item.image}
         />
         </div>`);
-        
         if ($preview) {
         var html =frm.get_field("custom_image_view").$wrapper.html($preview);
         }

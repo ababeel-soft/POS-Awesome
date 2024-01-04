@@ -92,8 +92,9 @@ def create_sales_order(doc):
                 sales_order_doc.custom_discount_reason=doc.discount_reason
             if hasattr(doc, "posa_delivery_charges"):
                 sales_order_doc.shipping_address=doc.posa_delivery_charges
+            if hasattr(doc,"custom_bundle_details"):
+                sales_order_doc.bundle_details=doc.custom_bundle_details
 
-                
 
             sales_order_doc.save()
             sales_order_doc.submit()

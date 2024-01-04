@@ -26,7 +26,9 @@ def get_orders(company, currency, customer=None, sales_order_search=None,order_s
                 "custom_order_description",
                 "contact_mobile",
                 "recipient_phone_number",
-                "shipping_address"
+                "shipping_address",
+                "bundle_details",
+                "custom_bundle_details_image"
 
             ]
 
@@ -100,9 +102,6 @@ def update_order(workflow_state,custom_notes,order_name,workstation=None):
         doc.workstation=workstation
     doc.custom_notes=custom_notes
     doc.save()
-
-
-
 
 
 @frappe.whitelist()

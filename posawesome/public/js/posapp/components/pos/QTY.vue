@@ -126,7 +126,7 @@ export default {
       this.qty=1;
       this.QTYDialog = true;
       this.parentItem = item || null;
-      this.$refs.qty.focus();
+      //this.$refs.qty.focus();
       
      
     });

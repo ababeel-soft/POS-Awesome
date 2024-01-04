@@ -46,6 +46,14 @@ class CustomSalesOrder(SalesOrder):
         self.user=session.user
         row.time = datetime.now().time()
         row.date = date.today()
+
+
+    def add_stock_entry_details(self,stock_entry,item,setting):
+        row = stock_entry.append('items', {})
+        row.item_code = item["item_code"]
+        row.qty = item["qty"]
+        row.uom=item["uom"]
+        row.s_warehouse=setting.warehouse_consumed_items
       
     def change_state(self):
         old_doc = self.get_doc_before_save()
@@ -57,10 +65,12 @@ class CustomSalesOrder(SalesOrder):
         else:
             if self.posa_notes:
                 self.add_row_note("Draft",self.posa_notes)
+        if self.workflow_state=="Picturing":
+            self.create_material_issue()
             
 
     def create_item(self):
-        if self.workflow_state=="Delivery" and self.bundle_details:
+        if self.workflow_state=="Completed" and self.bundle_details:
             #item
             r=random.randint(1,1000)
             old_bundle = frappe.get_doc("Item",self.bundle_details)
@@ -101,12 +111,15 @@ class CustomSalesOrder(SalesOrder):
                 new_bundle_item.rate=prod_item.rate
                 new_bundle_item.uom=prod_item.uom
                
-
-            new_bundle.save()
-
-
-            #print(old_bundle.name[old_bundle.name.index("-"):])
-            
-
-            #new_doc = frappe.new_doc("Item")
-            #new_doc
+    def create_material_issue(self):
+        setting = frappe.get_doc("POSAwesome Settings")
+        product_bundle = frappe.get_value("Item",self.bundle_details,"custom_product_bundle")
+        consumed_items = frappe.get_all("Consumed Product Bundle Item",filters={"parent":product_bundle},fields=["item_code","qty","uom"])
+        stock_entry=frappe.new_doc("Stock Entry")
+        stock_entry.stock_entry_type="Material Issue"
+        stock_entry.company=self.company
+        for stock_entry_detail in consumed_items:
+            self.add_stock_entry_details(stock_entry,stock_entry_detail,setting)
+        stock_entry.save()
+        stock_entry.submit()
+        

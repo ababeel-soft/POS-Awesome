@@ -183,18 +183,29 @@
                 >
                 </v-autocomplete>
               </v-col>
+            <v-col cols="6" v-if =bundle_details>
+            <v-text-field
+            dense
+            readonly
+            color="#FF0E0E"
+            :label="frappe._('Bundle Details')"
+            background-color="white"
+            hide-details
+            v-model="bundle_details"
+            ></v-text-field>
+            </v-col>
 
-                <v-col cols="6">
-                <v-text-field
-                  dense
-                  readonly
-                  color="#FF0E0E"
-                  :label="frappe._('Order Description')"
-                  background-color="white"
-                  hide-details
-                  v-model="order_description"
-                ></v-text-field>
-                 </v-col>
+            <v-col cols="6">
+            <v-text-field
+            dense
+            readonly
+            color="#FF0E0E"
+            :label="frappe._('Order Description')"
+            background-color="white"
+            hide-details
+            v-model="order_description"
+            ></v-text-field>
+            </v-col>
             </v-row>
              <v-row justify="center">
           <v-container>
@@ -370,10 +381,31 @@
       </tr>
 
       </template>
-
       </v-data-table>
-    
       </v-container>
+
+      <v-container >
+      <template v-if =bundle_details>
+      <div>
+      <button @click="toggleSection">{{__("Show Bundle Image") }}</button>
+      </div>
+      </template>
+
+      <template v-if="showSection" >
+      <v-img 
+      :src=" bundle_image ||  '/assets/posawesome/js/posapp/components/pos/placeholder-image.png'"
+      class="white--text align-end"
+      gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.7)"
+      >
+      </v-img>
+      </template>
+
+
+      </v-container>
+
+
+
+
       </v-card>
     </v-dialog>
 <SMSDialog></SMSDialog>
@@ -385,6 +417,7 @@
 <script>
 import { evntBus } from '../../bus';
 import SMSDialog from "../orders/SMSDialog.vue";
+
 export default {
   data: () => ({
     series: [12,15],
@@ -411,6 +444,10 @@ export default {
     customer: '',
     contact_mobile: '',
     workflow_state: '',
+    showSection:'',
+    bundle_details:'',
+    selectedFile:null ,
+    bundle_image:'/assets/posawesome/js/posapp/components/pos/placeholder-image.png',
     workflowstatus: [],
     workstations: [],
     workstation_search:"",
@@ -458,6 +495,33 @@ export default {
    SMSDialog
   },
   methods: {
+    handleFileUpload(event) {
+      this.selectedFile = event.target.files[0];
+      console.log(this.selectedFile);
+    },
+    uploadImage() {
+      if (this.selectedFile) {
+      const formData = new FormData();
+      formData.append('file', this.selectedFile); 
+
+      
+      frappe.upload_file(formData)
+      .then(response => {
+      // Handle successful upload
+      console.log('Image uploaded successfully:', response.data.file_url);
+      })
+      .catch(error => {
+      // Handle upload error
+      console.error('Image upload failed:', error);
+      });
+      
+      }
+    },
+
+    toggleSection() {
+      //this.bundle_image = 
+      this.showSection = !this.showSection; // Toggle the visibility of the section
+    },
    
     close_dialog() {
       this.OrderDialog = false;
@@ -467,13 +531,15 @@ export default {
       customer ='',
       contact_mobile = '',
       workflow_state = '',
+      bundle_details='',
       workflowstatus = [],
       workstations=[],
       custom_notes ='',
       order_notes=[],
       delivery_date = '',
       order_name = '',
-      filterdItems = []
+      filterdItems = [],
+      bundle_image=''
      
     },
     disable_buttons(vm){
@@ -728,6 +794,7 @@ export default {
         this.delivery_date = data.delivery_date;
         this.custom_delivery_time =data.custom_delivery_time;
         this.workflow_state = data.workflow_state;
+        this.bundle_details = data.bundle_details;
         this.workstation_search = data.workstation;
         this.contact_mobile = data.contact_mobile;
         this.custom_notes="";
@@ -735,6 +802,7 @@ export default {
         this.get_order_notes(data.name);
         this.order_description = data.custom_order_description
         this.order_doc=data;
+        this.bundle_image=data.custom_bundle_details_image;
       }
       this.show_buttons(this);
       this.get_workstations();

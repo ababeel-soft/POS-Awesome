@@ -29,18 +29,15 @@
             ref="debounce_search"
           ></v-text-field>
         </v-col>
-        <v-col cols="3" class="pb-0 mb-2" v-if="pos_profile.posa_input_qty">
+        <v-col cols="3" class="pb-0 mb-2">
           <v-text-field
             dense
             outlined
             color="primary"
-            :label="frappe._('QTY')"
+            :label="frappe._('Bundle')"
             background-color="white"
             hide-details
-            v-model.number="qty"
-            type="number"
-            @keydown.enter="enter_event"
-            @keydown.esc="esc_event"
+            v-model="bundle_details"
           ></v-text-field>
         </v-col>
         <v-col cols="2" class="pb-0 mb-2" v-if="pos_profile.posa_new_line">
@@ -224,6 +221,7 @@ export default {
     customer_price_list: null,
     new_line: false,
     qty: 1,
+    bundle_details:'',
   }),
 
   watch: {
@@ -369,9 +367,14 @@ export default {
     item = { ...item };
     if (item.has_variants) {
     evntBus.$emit('open_variants_model', item, this.items);
-    } else {
-    evntBus.$emit('open_qty_model', item);
+    }else if(item.custom_has_bundle){
+      evntBus.$emit('add_bundle', item);
+      this.bundle_details=item.item_code
+    }else {
+      evntBus.$emit('open_qty_model', item);
     }
+    //evntBus.$emit('add_item',item);
+
     },
     enter_event() {
       let match = false;
@@ -667,6 +670,9 @@ export default {
     });
     evntBus.$on('update_customer_price_list', (data) => {
       this.customer_price_list = data;
+    });
+     evntBus.$on('clear_bundle', () => {
+      this.bundle_details="";
     });
   },
 

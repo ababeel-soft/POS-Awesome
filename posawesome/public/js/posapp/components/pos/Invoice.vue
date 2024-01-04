@@ -838,6 +838,7 @@ export default {
       additional_discount_percentage: 0,
       total_tax: 0,
       items: [],
+      bundle:"",
       posOffers: [],
       posa_offers: [],
       posa_coupons: [],
@@ -1021,6 +1022,32 @@ export default {
       }
       this.$forceUpdate();
     },
+    add_bundle(item) {
+        if(this.bundle){
+        evntBus.$emit("show_mesage", {
+        text: "Bundle Added",
+        color: "warning",
+        });
+        return
+        }
+      this.bundle=item
+       frappe.call({
+            method: 'posawesome.posawesome.api.posapp.get_product_bundle_items',
+            args: {
+            'item':item
+            },
+            callback: function(r) {
+              if (!r.exc) {
+                var items = r.message;
+                for (let x in items) {
+                  var sub_item =items[x];
+                  sub_item["item_name"]=sub_item["item_code"];
+                  evntBus.$emit('add_item', sub_item);
+                }
+              }
+            }
+          });
+    },
 
     get_new_item(item) {
       const new_item = { ...item };
@@ -1063,6 +1090,7 @@ export default {
       const doc = this.get_invoice_doc();
       this.invoiceType = "Invoice";
       this.invoiceTypes = ["Invoice", "Order"];
+      this.bundle="";
       this.posting_date = frappe.datetime.nowdate();
       if (doc.name && this.pos_profile.posa_allow_delete) {
         frappe.call({
@@ -1092,12 +1120,13 @@ export default {
       this.selcted_delivery_charges = {};
       evntBus.$emit("set_customer_readonly", false);
       this.cancel_dialog = false;
+      evntBus.$emit('clear_bundle');
+      cancel_invoice
     },
 
     new_invoice(data = {}) {
       let old_invoice = null;
       evntBus.$emit("set_customer_readonly", false);
-      evntBus.$emit('add_bundle', null);
       console.log("new ");
       this.expanded = [];
       this.posa_offers = [];
@@ -1114,6 +1143,7 @@ export default {
       }
       if (!data.name && !data.is_return) {
         this.items = [];
+        this.bundle="";
         this.customer = this.pos_profile.customer;
         this.invoice_doc = "";
         this.discount_amount = 0;
@@ -1156,6 +1186,7 @@ export default {
           }
         });
       }
+      evntBus.$emit("clear_bundle");
       return old_invoice;
     },
 
@@ -1281,7 +1312,9 @@ export default {
       }
       evntBus.$emit("show_payment", "true");
       const invoice_doc = this.proces_invoice();
-      evntBus.$emit("send_invoice_doc_payment", invoice_doc);
+      const bundle_data={};
+      bundle_data["bundle_details"]=this.bundle;
+      evntBus.$emit("send_invoice_doc_payment", invoice_doc,bundle_data);
     },
 
     validate() {
@@ -2655,6 +2688,10 @@ export default {
     });
     evntBus.$on("add_item", (item) => {
       this.add_item(item);
+    });
+
+    evntBus.$on("add_bundle", (item) => {
+      this.add_bundle(item);
     });
     
     evntBus.$on("update_customer", (customer) => {
