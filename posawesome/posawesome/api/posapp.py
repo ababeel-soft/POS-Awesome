@@ -879,12 +879,12 @@ def delete_invoice(invoice):
 def get_items_details(pos_profile, items_data):
     _pos_profile = pos_profile
     return
-    #_pos_profile = frappe.get_doc("POS Profile",)
+    _pos_profile = frappe.get_doc("POS Profile",)
     ttl = _pos_profile.get("posa_server_cache_duration")
     if ttl:
         ttl = int(ttl) * 60
 
-    @redis_cache(ttl or 1800)
+    #@redis_cache(ttl or 1800)
     def __get_items_details(pos_profile, items_data):
         return _get_items_details(pos_profile, items_data)
 

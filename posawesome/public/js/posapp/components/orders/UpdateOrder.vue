@@ -400,6 +400,12 @@
       </v-img>
       </template>
 
+<template>
+  <div>
+    <input type="file" @change="handleFileUpload" accept="image/*">
+    <button @click="uploadImage">Upload Image</button>
+  </div>
+</template>
 
       </v-container>
 
@@ -501,24 +507,28 @@ export default {
     },
     uploadImage() {
       if (this.selectedFile) {
-      const formData = new FormData();
-      formData.append('file', this.selectedFile); 
-
-      
-      frappe.upload_file(formData)
-      .then(response => {
-      // Handle successful upload
-      console.log('Image uploaded successfully:', response.data.file_url);
-      })
-      .catch(error => {
-      // Handle upload error
-      console.error('Image upload failed:', error);
-      });
-      
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/method/upload_file', true);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('X-Frappe-CSRF-Token', frappe.csrf_token);
+        let form_data = new FormData();
+        form_data.append('file',this.selectedFile);
+        xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+        var fileName = response.message.name;
+        console.log('File Name:', fileName);
+        } else {
+        console.log('Error:', xhr.statusText);
+        }
+        }
+        };
+        xhr.send(form_data);
+        
       }
-    },
-
-    toggleSection() {
+    }
+    ,toggleSection() {
       //this.bundle_image = 
       this.showSection = !this.showSection; // Toggle the visibility of the section
     },
